@@ -1,0 +1,6 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # using .html in urls for backwards compatibility
+    RewriteRule ^(.*)\.html$ $1.php
+</IfModule>

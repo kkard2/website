@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # following RewriteRule is needed if installing this repo to a different
+    # directory than root, due to using absolute navigation
+
+    # replace /path/to/root/src/$1 with src's path relative to server directory
+    # e.g. /projects/2024/group2/name/$1
+    # warning: this will break other saved sites, file can be renamed to
+    #          restore previous behavior
+    RewriteRule ^(.*)$ /path/to/root/src/$1
+</IfModule>

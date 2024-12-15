@@ -1,4 +1,15 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteRule ^(.*)\.html$ /template.php?path=$1.html
+
+    # images, etc.
+    RewriteCond %{REQUEST_URI} ^/res/.*$
+    RewriteRule ^(.*)$ /content/$1 [L,END]
+
+    # rss
+    RewriteCond %{REQUEST_URI} \.xml$
+    RewriteCond %{REQUEST_URI} !^/content/
+    RewriteRule ^(.*)$ /content/$1 [L,END]
+
+    RewriteCond %{REQUEST_URI} !^/index\.php$
+    RewriteRule ^(.*)$ /index.php? [L,QSA]
 </IfModule>

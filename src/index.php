@@ -1,3 +1,14 @@
+<?php
+declare(strict_types=1);
+
+echo "helo";
+require_once 'app/Core/Router.php';
+
+use \App\Core\Router;
+$router = new Router();
+$router->handleRequest($_SERVER['REQUEST_URI']);
+?>
+<!--
 <html>
     <head>
         <meta charset="utf-8">
@@ -21,3 +32,4 @@
         </div>
     </body>
 </html>
+-->

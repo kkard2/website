@@ -2,13 +2,24 @@
 namespace App\Core;
 
 require_once 'ContentPage.php';
+require_once __DIR__ . '/../Views/ContentView.php';
 
 class Router {
     public function handleRequest(string $uri): void {
-        // TODO
         $slug = $this->uriToCanonicalSlug($uri);
+
+        switch ($slug) {
+        case '/software/':
+            
+            break;
+        }
+
         $path = $this->findContentFilePath($slug);
+
         $content = ContentPage::parse($path);
+        $view = new \App\Views\ContentView($slug, $content->getContent());
+        $view->show();
+
         echo $content->getContent();
     }
 
@@ -19,7 +30,7 @@ class Router {
             $uri = substr($uri, 0, $indexHtmlPos);
         }
 
-        if (strpos($uri, '.html') === false && !str_ends_with($uri, '/')) {
+        if (str_ends_with($uri, '.html') === false && !str_ends_with($uri, '/')) {
             $uri = $uri . '/';
         }
 

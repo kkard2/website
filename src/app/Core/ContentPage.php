@@ -42,12 +42,13 @@ class ContentPage {
                 break;
             }
 
-            //$newContent .= substr($content, $offset, $begin - $offset);
-            /* $newContent .= ContentPage::createAutolink( */
-            /*     substr($content, $begin, $end - $begin) */
-            /* ); */
+            $newContent .= substr($content, $offset, $begin - $offset);
+            $newContent .= ContentPage::createAutolink(
+                substr($content, $begin, $end - $begin)
+            );
+            $newContent .= $content[$end];
 
-            $offset = $end;
+            $offset = $end + 1;
         }
 
         $newContent .= substr($content, $offset);
@@ -59,6 +60,6 @@ class ContentPage {
         $tagPart = substr($unclosedTag, 0, $contentBegin - 1);
         $contentPart = substr($unclosedTag, $contentBegin);
         $id = preg_replace('/[^a-zA-Z0-9]/', '-', trim($contentPart));
-        return "$tagPart><a class='id-link' id='$id'>$contentPart</a>";
+        return "$tagPart><a class='id-link' id='$id' href='#$id'>$contentPart</a>";
     }
 }

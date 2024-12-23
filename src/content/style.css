@@ -1,0 +1,256 @@
+body {
+    background: black;
+    color: #ddd;
+    font-family: Consolas, monospace, monospace;
+    font-size: 16px;
+    margin-inline: max(1ch, 50% - 80ch / 2);
+    line-height: 1.2;
+}
+
+::selection {
+    background: #f0f;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-top: 2em;
+    margin-bottom: 1em;
+    font-size: 16px;
+    font-weight: 1100;
+    line-height: 1.2;
+}
+
+h1::before {
+    content: "# ";
+}
+
+h2::before {
+    content: "## ";
+}
+
+h3::before {
+    content: "### ";
+}
+
+h4::before {
+    content: "#### ";
+}
+
+h5::before {
+    content: "##### ";
+}
+
+h6::before {
+    content: "###### ";
+}
+
+/*
+body {
+    background: black;
+    color: #ddd;
+    font-family: Consolas, monospace, monospace;
+    font-size: 16px;
+    align: center;
+    margin-inline: max(1ch, 50% - 80ch / 2);
+    line-height: 1.2;
+}
+
+::selection {
+    color: white;
+    background: #f0f;
+}
+
+h1,
+h2,
+h3 {
+    color: white;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    font-size: 16px;
+    font-weight: 1100;
+    line-height: 1.2;
+}
+
+h1::before {
+    content: "# ";
+}
+
+h2::before {
+    content: "## ";
+}
+
+h3::before {
+    content: "### ";
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    padding-left: 1ch;
+}
+
+ul > li::before {
+    content: " - ";
+}
+
+ol {
+    padding: 0;
+    padding-left: 4ch;
+}
+
+a {
+    color: #f0f;
+}
+
+a:hover {
+    color: #000;
+    background: #f0f;
+}
+
+a.wrap {
+    white-space: normal;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+code {
+    display: inline-block;
+    background: #333;
+    border: solid gray;
+    border-width: 1px;
+    font-family: Consolas, monospace, monospace;
+    font-size: 16px;
+    margin: -1px;
+}
+
+code.block {
+    white-space: pre;
+}
+
+aside {
+    color: #0ff;
+}
+
+aside > p::before {
+    content: "> ";
+}
+
+header {
+    text-align: right;
+    width: round(min(100%, 80ch), 1ch);
+}
+
+header > a {
+    display: inline-block;
+    text-decoration: none;
+    margin-left: 1ch;
+}
+
+header::before {
+    display: block;
+    content: "================================================================================";
+    overflow: hidden;
+}
+
+header::after {
+    display: block;
+    content: "================================================================================";
+    overflow: hidden;
+}
+
+.scroll-container {
+    max-width: round(min(100%, 80ch), 1ch);
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.comment::before {
+    white-space: nowrap;
+}
+
+.comment::after {
+    white-space: nowrap;
+}
+
+.comment {
+    color: #777777;
+}
+
+
+a.id-link {
+    text-decoration: none;
+    color: white;
+    white-space: normal;
+}
+
+h1 > a.id-link {
+    max-width: fit-content;
+}
+
+h1 > a.id-link:hover {
+    background-color: white;
+    color: black;
+    max-width: fit-content;
+}
+
+
+h2 > a.id-link {
+    max-width: fit-content;
+}
+
+h2 > a.id-link:hover {
+    background-color: white;
+    color: black;
+    max-width: fit-content;
+}
+
+h3 > a.id-link {
+    max-width: fit-content;
+}
+
+h3 > a.id-link:hover {
+    background-color: white;
+    color: black;
+    max-width: fit-content;
+}
+
+strong::before {
+    content: "**"
+}
+
+strong::after {
+    content: "**"
+}
+
+a:target {
+    background: #00f;
+}
+
+/* yes, this solution is stupid */
+
+@media only screen and (max-width: 50ch) {
+    header {
+        text-align: left;
+    }
+
+    header > a {
+        display: block;
+    }
+}
+
+@media only screen and not (max-width: 50ch) {
+    header > a.filesystem-root::before {
+        content: "\2003";
+    }
+
+    header > a.filesystem-root::after {
+        content: "\2003";
+    }
+}
+*/

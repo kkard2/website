@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 
-echo "helo";
 require_once 'app/Core/Router.php';
 
 use \App\Core\Router;

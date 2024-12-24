@@ -64,15 +64,15 @@ ancestors did. but there is one issue; html+css has some limitations
 i've touched upon this in the previous post, but i didn't clarify how scuffed
 the parsing is. to reiterate, i can do something like this in my html code:
 </p>
-<div class="scroll-container">
-    <code class="nowrap">
+<div>
+    <code class="wrap">
         &lt;!-- #include software/2024/02/03/paint.html --&gt;
     </code>
 </div>
 <p>
 but how is that parsed?
 </p>
-<code class="block scroll-container">for line in source:
+<code class="block">for line in source:
     if '&lt;!-- #include' in line:
         include_file = line.split('&lt;!-- #include')[1]
         include_file = include_file.split('--&gt;')[0].strip()
@@ -94,7 +94,7 @@ so, every page has this nice navigation header at the top, and it would be
 pretty wet if i copy-pasted it to every html file i write. that's why i use a
 template file:
 </p>
-<code class="block scroll-container">&lt;!DOCTYPE html&gt;
+<code class="block">&lt;!DOCTYPE html&gt;
 &lt;html lang="en"&gt;
     &lt;head&gt;
         &lt;meta charset="utf-8"&gt;
@@ -119,14 +119,14 @@ template file:
 i will not dwell on it because it's pretty self explenatory: just paste files
 in the place of <code class="nowrap">##content##</code> and change the title to
 file path (if it's not overriden by
-<code class="nowrap">&lt;!-- #title actual title --&gt;</code>
+<code class="wrap">&lt;!-- #title actual title --&gt;</code>
 </p>
 
 <h3>shiny new stuff</h3>
 <p>
 you can now click every <code class="nowrap">&lt;h1&gt;</code>,
-<code class="nowrap">&lt;h2&gt;</code> and
-<code class="nowrap">&lt;h3&gt;</code> tag! this will create a link to the
+<code>&lt;h2&gt;</code> and
+<code>&lt;h3&gt;</code> tag! this will create a link to the
 specific part of a page. surely there is greater than zero probability that
 this will be used by someone in the future, right?
 </p>

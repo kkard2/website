@@ -8,7 +8,8 @@ body {
 }
 
 ::selection {
-    background: #f0f;
+    color: #000;
+    background: #0ff;
 }
 
 h1,
@@ -17,56 +18,6 @@ h3,
 h4,
 h5,
 h6 {
-    margin-top: 2em;
-    margin-bottom: 1em;
-    font-size: 16px;
-    font-weight: 1100;
-    line-height: 1.2;
-}
-
-h1::before {
-    content: "# ";
-}
-
-h2::before {
-    content: "## ";
-}
-
-h3::before {
-    content: "### ";
-}
-
-h4::before {
-    content: "#### ";
-}
-
-h5::before {
-    content: "##### ";
-}
-
-h6::before {
-    content: "###### ";
-}
-
-/*
-body {
-    background: black;
-    color: #ddd;
-    font-family: Consolas, monospace, monospace;
-    font-size: 16px;
-    align: center;
-    margin-inline: max(1ch, 50% - 80ch / 2);
-    line-height: 1.2;
-}
-
-::selection {
-    color: white;
-    background: #f0f;
-}
-
-h1,
-h2,
-h3 {
     color: white;
     margin-top: 2em;
     margin-bottom: 1em;
@@ -75,17 +26,14 @@ h3 {
     line-height: 1.2;
 }
 
-h1::before {
-    content: "# ";
-}
 
-h2::before {
-    content: "## ";
-}
+h1::before { color: #fff; content: "# "; }
+h2::before { color: #ccc; content: "## "; }
+h3::before { color: #999; content: "### "; }
+h4::before { color: #999; content: "#### "; }
+h5::before { color: #999; content: "##### "; }
+h6::before { color: #999; content: "###### "; }
 
-h3::before {
-    content: "### ";
-}
 
 ul {
     list-style-type: none;
@@ -102,7 +50,9 @@ ol {
     padding-left: 4ch;
 }
 
+
 a {
+    white-space: nowrap;
     color: #f0f;
 }
 
@@ -119,28 +69,156 @@ a.wrap {
     white-space: nowrap;
 }
 
+a.id-link {
+    text-decoration: none;
+    color: inherit;
+    white-space: normal;
+}
+
+h1 > a.id-link,
+h2 > a.id-link,
+h3 > a.id-link,
+h4 > a.id-link,
+h5 > a.id-link,
+h6 > a.id-link {
+    max-width: fit-content;
+}
+
+h1 > a.id-link:hover,
+h2 > a.id-link:hover,
+h3 > a.id-link:hover,
+h4 > a.id-link:hover,
+h5 > a.id-link:hover,
+h6 > a.id-link:hover {
+    background-color: white;
+    color: black;
+    max-width: fit-content;
+}
+
+strong::before {
+    content: "**"
+}
+
+strong::after {
+    content: "**"
+}
+
+a:target {
+    background: #00f;
+}
+
+
+
+
 code {
     display: inline-block;
-    background: #333;
-    border: solid gray;
+    color: #0f0;
+    border: solid #777;
     border-width: 1px;
     font-family: Consolas, monospace, monospace;
     font-size: 16px;
     margin: -1px;
+    max-width: round(min(100%, 80ch), 1ch);
+    overflow-x: clip;
 }
 
 code.block {
     white-space: pre;
+    overflow-x: auto;
+    overflow-y: none;
 }
 
-aside {
+aside > p {
+    position: relative;
     color: #0ff;
+    padding-left: 2ch;
 }
 
+/* this shouldn't work but it unfortunately does */
 aside > p::before {
-    content: "> ";
+    content: "> \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > \A > ";
+    white-space: pre;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30px;
+    height: 100%;
+    line-height: 1.2;
+    pointer-events: none;
+    overflow: clip;
 }
 
+header {
+    width: round(min(100%, 80ch), 1ch);
+}
+
+header::before {
+    display: block;
+    content: "================================================================================";
+    color: #777;
+    overflow: hidden;
+}
+
+header::after {
+    display: block;
+    content: "================================================================================";
+    color: #777;
+    overflow: hidden;
+}
+
+header a {
+    text-decoration: none;
+}
+
+.menu {
+    position: relative;
+}
+
+.menu > a::before {
+    white-space: pre;
+    content: " ";
+}
+
+.menu > a::after {
+    white-space: pre;
+    content: " ";
+}
+
+.menu-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #444;
+    z-index: 1;
+}
+
+.menu-content a {
+    display: block;
+    color: white;
+}
+
+/* TODO */
+.menu-content a::hover {
+    color: black;
+    background: #ff0;
+}
+
+.menu-content a::before {
+    white-space: pre;
+    content: " ";
+}
+
+.menu-content a::after {
+    white-space: pre;
+    content: " ";
+}
+
+.menu:hover .menu-content {
+    display: block;
+}
+
+/*
 header {
     text-align: right;
     width: round(min(100%, 80ch), 1ch);
@@ -234,6 +312,7 @@ a:target {
 
 /* yes, this solution is stupid */
 
+/*
 @media only screen and (max-width: 50ch) {
     header {
         text-align: left;

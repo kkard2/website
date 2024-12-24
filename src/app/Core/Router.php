@@ -19,8 +19,6 @@ class Router {
         $content = ContentPage::parse($path);
         $view = new \App\Views\ContentView($slug, $content->getContent());
         $view->show();
-
-        echo $content->getContent();
     }
 
     private function uriToCanonicalSlug(string $uri): string {

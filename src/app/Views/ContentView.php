@@ -19,12 +19,19 @@ class ContentView {
     </head>
     <body>
         <header>
-            <a href="/" class="filesystem-root">/</a>
-            <a href="/software">/software</a>
-            <a href="/blog">/blog</a>
-            <a href="/rss">/rss</a>
-            <a href="/people">/people</a>
-            <a href="/ophs">/ophs</a>
+            <nav>
+                <div class="menu">
+                    <a href="/menu">/menu</a>
+                    <div class="menu-content">
+                        <a href="/">/</a>
+                        <a href="/software">/software</a>
+                        <a href="/blog">/blog</a>
+                        <a href="/rss">/rss</a>
+                        <a href="/people">/people</a>
+                        <a href="/ophs">/ophs</a>
+                    </div>
+                </div>
+            </nav>
         </header>
         <div>
             <?= $this->inner; ?>

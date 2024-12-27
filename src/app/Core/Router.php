@@ -1,24 +1,42 @@
 <?php
 namespace App\Core;
 
-require_once 'ContentPage.php';
-require_once __DIR__ . '/../Views/ContentView.php';
-
 class Router {
     public function handleRequest(string $uri): void {
-        $slug = $this->uriToCanonicalSlug($uri);
+        try {
+            $slug = $this->uriToCanonicalSlug($uri);
+            $view = $this->createView($slug);
 
+            if ($view === null) {
+                $view = new \App\Views\NotFoundView($slug);
+            }
+
+            $view->show();
+        } catch (Exception $e) {
+            $view = new \App\Views\InternalServerErrorView();
+            $view->show();
+        }
+    }
+
+    private function createView(string $slug): ?\App\Views\View {
         switch ($slug) {
         case '/software/':
-            
-            break;
+            return \App\Views\SoftwareView::create();
         }
 
         $path = $this->findContentFilePath($slug);
 
-        $content = ContentPage::parse($path);
-        $view = new \App\Views\ContentView($slug, $content->getContent());
-        $view->show();
+        if ($path === null) {
+            return null;
+        }
+
+        $content = \App\Models\ContentPageModel::fromFile($path);
+
+        if ($content === null) {
+            return null;
+        }
+
+        return new \App\Views\ContentView($slug, $content->getContent());
     }
 
     private function uriToCanonicalSlug(string $uri): string {

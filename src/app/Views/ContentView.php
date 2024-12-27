@@ -1,13 +1,13 @@
 <?php
 namespace App\Views;
 
-class ContentView {
+class ContentView implements View {
     public function __construct(
         private string $slug,
         private string $inner
     ) {}
 
-    public function show() {
+    public function show(): void {
 ?>
 <!DOCTYPE html>
 <html lang='en'>

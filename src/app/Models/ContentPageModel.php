@@ -1,12 +1,12 @@
 <?php
-namespace App\Core;
+namespace App\Models;
 
-class ContentPage {
+class ContentPageModel {
     private function __construct(
         private string $content
     ) {}
 
-    public static function parse(string $filePath): ?ContentPage {
+    public static function fromFile(string $filePath): ?ContentPageModel {
         $fileContent = file_get_contents($filePath);
 
         if ($fileContent === false) {
@@ -16,10 +16,10 @@ class ContentPage {
         $tags = ['h1', 'h2', 'h3'];
 
         foreach ($tags as $tag) {
-            $fileContent = ContentPage::processAutolinks($tag, $fileContent);
+            $fileContent = ContentPageModel::processAutolinks($tag, $fileContent);
         }
 
-        return new ContentPage($fileContent);
+        return new ContentPageModel($fileContent);
     }
 
     public function getContent(): string {
@@ -43,7 +43,7 @@ class ContentPage {
             }
 
             $newContent .= substr($content, $offset, $begin - $offset);
-            $newContent .= ContentPage::createAutolink(
+            $newContent .= ContentPageModel::createAutolink(
                 substr($content, $begin, $end - $begin)
             );
             $newContent .= $content[$end];

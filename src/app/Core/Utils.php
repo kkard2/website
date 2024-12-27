@@ -6,10 +6,10 @@ class Utils {
     public static function walkDirectory(string $baseDir): array {
         $files = [];
 
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator(
-                $directory,
-                FilesystemIterator::SKIP_DOTS
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(
+                $baseDir,
+                \FilesystemIterator::SKIP_DOTS
             )
         );
 

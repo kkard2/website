@@ -213,7 +213,8 @@ header a {
     content: " ";
 }
 
-.menu:hover .menu-content {
+.menu > a:hover + .menu-content,
+.menu-content:hover {
     display: block;
 }
 

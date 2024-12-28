@@ -12,8 +12,9 @@ class Router {
             }
 
             $view->show();
-        } catch (Exception $e) {
-            $view = new \App\Views\InternalServerErrorView();
+        } catch (\Exception $e) {
+            // TODO: consider not using raw getMessage for security reasons
+            $view = new \App\Views\InternalServerErrorView($e->getMessage());
             $view->show();
         }
     }
@@ -21,7 +22,7 @@ class Router {
     private function createView(string $slug): ?\App\Views\View {
         switch ($slug) {
         case '/software/':
-            return \App\Views\SoftwareView::create();
+            return new \App\Views\SoftwareView;
         }
 
         $path = $this->findContentFilePath($slug);

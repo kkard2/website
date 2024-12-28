@@ -3,7 +3,8 @@ namespace App\Models;
 
 class ContentPageModel {
     private function __construct(
-        private string $content
+        private string $content,
+        private ?\DateTimeImmutable $metaDateTime
     ) {}
 
     public static function fromFile(string $filePath): ?ContentPageModel {
@@ -19,11 +20,16 @@ class ContentPageModel {
             $fileContent = ContentPageModel::processAutolinks($tag, $fileContent);
         }
 
-        return new ContentPageModel($fileContent);
+        // TODO: parse metadata
+        return new ContentPageModel($fileContent, null);
     }
 
     public function getContent(): string {
         return $this->content;
+    }
+
+    public function getMetaDateTime(): ?\DateTimeImmutable {
+        return $this->metaDateTime;
     }
 
     private static function processAutolinks(
@@ -56,7 +62,9 @@ class ContentPageModel {
     }
 
     private static function createAutolink(string $unclosedTag): string {
-        $contentBegin = strpos($unclosedTag, '>') + 1;
+        $contentBegin = strpos($unclosedTag, '>');
+        assert(is_integer($contentBegin));
+        $contentBegin = $contentBegin + 1;
         $tagPart = substr($unclosedTag, 0, $contentBegin - 1);
         $contentPart = substr($unclosedTag, $contentBegin);
         $id = preg_replace('/[^a-zA-Z0-9]/', '-', trim($contentPart));

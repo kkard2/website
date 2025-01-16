@@ -5,17 +5,19 @@ use \App\Core\Utils;
 use \App\Core\SoftwareViewEntry;
 
 class SoftwareView implements View {
-    /** @var list<SoftwareViewEntry> */
-    private array $entries;
+    private function __construct(
+        /** @var list<SoftwareViewEntry> */
+        private readonly array $entries,
+    ) {}
 
-    public function __construct() {
+    public static function create(): View {
         $basePath = realpath('content/software/');
 
         if ($basePath === false) {
             throw new \Exception('Cannot read content');
         }
 
-        $this->entries = [];
+        $entries = [];
 
         foreach (Utils::walkDirectory($basePath) as $filePath) {
             $partialSlug = str_replace(
@@ -37,24 +39,39 @@ class SoftwareView implements View {
             }
 
             $dateTime = $content->getMetaDateTime() ?? $dateTime;
-            $this->entries[] = new SoftwareViewEntry($dateTime, $content);
+            $entries[] = new SoftwareViewEntry($dateTime, $content);
         }
 
-        usort($this->entries, function ($a, $b) {
+        usort($entries, function ($a, $b) {
             assert($a instanceof SoftwareViewEntry);
             assert($b instanceof SoftwareViewEntry);
             return $a->dateTime <=> $b->dateTime;
         });
+
+        return new SoftwareView($entries);
     }
 
     public function show(): void {
-    // todo what to do with preprocessing i am to eepy for that now
     ?>
 <h1>i hate software</h1>
-
+<p>
 this is a page where i collect annoying problems i encounter while using software.
+</p>
 
-also, check out /ophs (other people hating software) 
+<p>
+also, check out <a href='/ophs'>/ophs</a> (other people hating software)
+</p>
 <?php
+        $prevDateTime = null;
+
+        foreach ($this->entries as $entry) {
+            if ($entry->dateTime != $prevDateTime) {
+                $prevDateTime = $entry->dateTime;
+                echo "<h2>";
+                echo $prevDateTime->format("Y-m-d");
+                echo "</h2>";
+            }
+            echo $entry->contentPage->getContent();
+        }
     }
 }

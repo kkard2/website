@@ -103,6 +103,10 @@ strong::after {
     content: "**"
 }
 
+strong {
+    color: white;
+}
+
 a:target {
     background: #00f;
 }
@@ -120,6 +124,11 @@ code {
     margin: -1px;
     max-width: round(min(100%, 80ch), 1ch);
     overflow-x: clip;
+}
+
+code::selection {
+    color: #000;
+    background: #0f0;
 }
 
 code.block {

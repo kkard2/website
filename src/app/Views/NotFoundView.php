@@ -2,16 +2,15 @@
 namespace App\Views;
 
 class NotFoundView implements View {
-    private ContentView $inner;
+    private function __construct(
+        private readonly string $slug
+    ) {}
 
-    public function __construct(string $slug) {
-        $this->inner = new ContentView(
-            $slug,
-            "<h1>404 Not Found</h1>Page '$slug' does not exist"
-        );
+    public static function create(string $slug): View {
+        return new NotFoundView($slug);
     }
 
     public function show(): void {
-        $this->inner->show();
+        echo "<h1>404 Not Found</h1>Page '$this->slug' does not exist";
     }
 }

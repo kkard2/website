@@ -1,10 +1,10 @@
 <?php
 namespace App\Views;
 
-class ContentView implements View {
+class TemplateView implements View {
     public function __construct(
-        private string $slug,
-        private string $inner
+        private readonly string $slug,
+        private readonly string $inner
     ) {}
 
     public function show(): void {
@@ -34,7 +34,11 @@ class ContentView implements View {
             </nav>
         </header>
         <div>
-            <?= $this->inner; ?>
+<?php
+        echo $this->inner;
+        // maybe don't do comments always?
+?>
+            <h1>comments</h1>
         </div>
     </body>
 </html>

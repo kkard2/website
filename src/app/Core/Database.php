@@ -2,11 +2,11 @@
 namespace App\Core;
 
 use \App\Models\PageCommentModel;
+use \App\Models\UserUsernameModel;
 
 class Database {
     private function __construct(
         private readonly \mysqli $connection,
-        private readonly \mysqli_stmt $getPageCommentsStmt,
     ) {}
 
     public static function connect(
@@ -21,41 +21,38 @@ class Database {
             return null;
         }
 
-        $getPageCommentsStmt = $connection->prepare(
-            'SELECT ( ' .
-            'comments.id as id, ' .
-            'comments.replyToId as replyToId, ' .
-            'comments.content as content, ' .
-            'users.username as posterUsername, ' .
-            'FROM comments ' .
-            'INNER JOIN users ON users.id = comments.posterId ' .
-            'WHERE comments.slug = ? '
+        return new Database(
+            $connection,
         );
-
-        if ($getPageCommentsStmt === false) {
-            throw new \Exception("Could not create a prepared statement.");
-        }
-
-        return new Database($connection, $getPageCommentsStmt);
     }
 
     public function close(): void {
-        $this->getPageCommentsStmt->close();
         $this->connection->close();
     }
 
     /** @return list<PageCommentModel> */
     public function getPageComments(string $slug): array {
-        $this->getPageCommentsStmt->bind_param('s', $slug);
-        $this->getPageCommentsStmt->execute();
-        $result = $this->getPageCommentsStmt->get_result();
+        $stmt = $this->connection->prepare(
+            'SELECT ' .
+            'comments.id AS id, ' .
+            'comments.replyToId AS replyToId, ' .
+            'comments.content AS content, ' .
+            'users.username AS posterUsername ' .
+            'FROM comments ' .
+            'INNER JOIN users ON users.id = comments.posterId ' .
+            'WHERE comments.hide = FALSE ' .
+            '  AND comments.slug = ? '
+        );
+        $stmt->bind_param('s', $slug);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
         $comments = [];
 
         while ($row = $result->fetch_assoc()) {
             $comments[] = new PageCommentModel(
                 (string)$row['id'],
-                (string)$row['replyToId'],
+                is_null($row['replyToId']) ? null : (string)$row['replyToId'],
                 (string)$row['content'],
                 (string)$row['posterUsername'],
             );
@@ -64,45 +61,142 @@ class Database {
         return $comments;
     }
 
-/*    /1** @return ?list<UserModel> *1/ */
-/*    public function queryUsers(string $query): ?array { */
-/*        $result = $this->connection->query($query); */
+    public function registerUser(
+        string $username,
+        string $password,
+        string $parentId,
+    ): bool {
+        $stmt = $this->connection->prepare(
+            'INSERT INTO users ' .
+            '(username, passwordHash, parentId, admin, hide) ' .
+            'VALUES ' .
+            '(?, ?, ?, FALSE, FALSE) '
+        );
+        $password = password_hash($password, PASSWORD_DEFAULT);
+        $stmt->bind_param(
+            'sss',
+            $username,
+            $password,
+            $parentId,
+        );
+        $stmt->execute();
+        return $stmt->affected_rows > 0;
+    }
 
-/*        if (!($result instanceof \mysqli_result)) { */
-/*            return null; */
-/*        } */
+    public function validateParentKey(string $parentKey): ?string {
+        $stmt = $this->connection->prepare(
+            'SELECT ' .
+            'id ' .
+            'FROM users ' .
+            'WHERE users.parentKey = ? '
+        );
+        $stmt->bind_param('s', $parentKey);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
 
-/*        $users = []; */
+        if ($row === null) {
+            return null;
+        }
 
-/*        foreach ($result as $index => $row) { */
-/*            if (!is_array($row)) { */
-/*                throw new \Exception('Failed to query users'); */
-/*            } */
-/*            $parentId = array_key_exists('parentId', $row) */
-/*                ? ($row['parentId'] === null ? false : (int)$row['parentId']) */
-/*                : null; */
-/*            $users[] = new UserModel( */
-/*                array_key_exists('id', $row)           ? (int)$row['id']              : null, */
-/*                array_key_exists('username', $row)     ? (string)$row['username']     : null, */
-/*                array_key_exists('passwordHash', $row) ? (string)$row['passwordHash'] : null, */
-/*                $parentId, */
-/*                array_key_exists('bio', $row)          ? (string)$row['bio']          : null, */
-/*            ); */
-/*        } */
+        return (string)$row['id'];
+    }
 
-/*        return $users; */
-/*    } */
+    public function getUserBySession(string $sessionId): ?UserUsernameModel {
+        $this->dropInvalidSessions(); // TODO: this is probably fine; maybe schedule in the future?
+        $stmt = $this->connection->prepare(
+            'SELECT ' .
+            'users.id AS id, ' .
+            'users.username AS username ' .
+            'FROM sessions ' .
+            'INNER JOIN users ON users.id = sessions.userId ' .
+            'WHERE sessions.id = ? '
+        );
+        $stmt->bind_param('s', $sessionId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
 
-/*    public function queryUser(string $query): ?UserModel { */
-/*        $result = $this->queryUsers($query); */
-/*        if ($result === null) { */
-/*            return null; */
-/*        } */
+        if ($row === null) {
+            return null;
+        }
 
-/*        if (count($result) !== 1) { */
-/*            return null; */
-/*        } */
+        $result = new UserUsernameModel(
+            (string)$row['id'],
+            (string)$row['username']
+        );
 
-/*        return $result[0]; */
-/*    } */
+        // TODO: change to INTERVAL 14 DAY
+        $stmt = $this->connection->prepare('
+            UPDATE sessions
+            SET validUntil = DATE_ADD(NOW(), INTERVAL 1 HOUR)
+            WHERE sessions.id = ?
+        ');
+        $stmt->bind_param('s', $sessionId);
+        $stmt->execute();
+
+        return $result;
+    }
+
+    // returns true on success, otherwise reason
+    public function tryLogIn(
+        string $username,
+        string $password,
+        string $currentSession,
+    ): string|true {
+        $stmt = $this->connection->prepare(
+            'SELECT ' .
+            'id, ' .
+            'passwordHash, ' .
+            'hide ' .
+            'FROM users ' .
+            'WHERE users.username = ? '
+        );
+        $stmt->bind_param('s', $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+
+        if ($row === null) {
+            return 'invalid username or password';
+        }
+
+        $id = (string)$row['id'];
+        $passwordHash = (string)$row['passwordHash'];
+        $hide = (bool)$row['hide'];
+
+        if (!password_verify($password, $passwordHash)) {
+            return 'invalid username or password';
+        }
+
+        if ($hide) {
+            return 'you have been disowned';
+        }
+
+        // TODO: change to INTERVAL 14 DAY
+        $stmt = $this->connection->prepare('
+            INSERT INTO sessions
+            (id, userId, validUntil)
+            VALUES
+            (?, ?, DATE_ADD(NOW(), INTERVAL 1 HOUR))
+        ');
+        $stmt->bind_param('ss', $currentSession, $id);
+        $stmt->execute();
+
+        return true;
+    }
+
+    public function deleteSession(string $sessionId): void {
+        $stmt = $this->connection->prepare('
+            DELETE FROM sessions
+            WHERE sessions.id = ?
+        ');
+        $stmt->bind_param('s', $sessionId);
+        $stmt->execute();
+    }
+
+    private function dropInvalidSessions(): void {
+        $stmt = $this->connection->prepare('DELETE FROM sessions WHERE validUntil < NOW()');
+        $stmt->execute();
+    }
 }

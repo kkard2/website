@@ -74,4 +74,6 @@ also, check out <a href='/ophs'>/ophs</a> (other people hating software)
             echo $entry->contentPage->getContent();
         }
     }
+
+    public function shouldDisplayComments(): bool { return false; }
 }

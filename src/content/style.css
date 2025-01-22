@@ -227,6 +227,11 @@ header a {
     display: block;
 }
 
+.menu-user {
+    float: right;
+    margin-right: 1ch;
+}
+
 .comment::before {
     content: "\/* ";
     white-space: nowrap;
@@ -239,4 +244,73 @@ header a {
 
 .comment {
     color: #777777;
+}
+
+.error {
+    color: #f00;
+}
+
+.input-wrapper {
+    display: inline-block;
+}
+
+.input-wrapper::before {
+    content: "[";
+    color: #ff0;
+}
+.input-wrapper::after {
+    content: "]";
+    color: #ff0;
+}
+
+.input-wrapper:focus-within::before,
+.input-wrapper:focus-within::after {
+    color: #0ff;
+}
+
+input[type="text"], input[type="password"] {
+    padding: 0;
+    outline: 0 none;
+    border: 0 none;
+    color: #ddd;
+    background: transparent;
+    font-family: Consolas, monospace, monospace;
+    font-size: 16px;
+    line-height: 1.2;
+}
+
+input:invalid {
+    color: #f00;
+}
+
+button {
+    border: 0 none;
+    background: none;
+    color: #ff0;
+    font-family: Consolas, monospace, monospace;
+    font-size: 16px;
+    line-height: 1.2;
+    padding: 0;
+}
+
+button::before {
+    content: "[";
+}
+button::after {
+    content: "]";
+}
+
+button:hover {
+    color: #000;
+    background: #ff0;
+    cursor: pointer;
+}
+
+.user-link {
+    color: #0ff;
+}
+
+.user-link:hover {
+    color: #000;
+    background: #0ff;
 }

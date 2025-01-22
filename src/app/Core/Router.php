@@ -3,17 +3,29 @@ namespace App\Core;
 
 class Router {
     public function handleRequest(string $uri): void {
+        session_start();
         $content = Router::showViewRaw($uri);
-        echo \App\Core\Utils::processAllAutolinks($content);
+        $content = \App\Core\Utils::processAllAutolinks($content);
+        echo \App\Core\Utils::processAllAutousernames($content);
     }
 
     private function showViewRaw(string $uri): string {
         // TODO: this should probably be rewritten, looks ugly
-        //       also maybe not being here
+        //       also maybe not being in the router
         ob_start();
+        $currentUser = null;
         try {
+            // TODO: values from env
+            $db = \App\Core\Database::connect('localhost', 'root', '', 'kkard2');
+
+            if ($db === null) {
+                throw new \Exception('could not connect to the database');
+            }
+
+            $currentUser = $db->getUserBySession(session_id());
+
             $slug = $this->uriToCanonicalSlug($uri);
-            $view = $this->createView($slug);
+            $view = $this->createView($slug, $db);
 
             if ($view === null) {
                 $view = \App\Views\NotFoundView::create($slug);
@@ -21,7 +33,10 @@ class Router {
                 $result = ob_get_clean();
                 $view = new \App\Views\TemplateView(
                     $slug,
-                    $result
+                    $result,
+                    $db,
+                    $currentUser,
+                    $view->shouldDisplayComments(),
                 );
                 ob_start();
                 $view->show();
@@ -34,7 +49,10 @@ class Router {
             ob_start();
             $view = new \App\Views\TemplateView(
                 $slug,
-                $result
+                $result,
+                $db,
+                $currentUser,
+                $view->shouldDisplayComments(),
             );
             $view->show();
             return ob_get_clean();
@@ -47,7 +65,10 @@ class Router {
             $result = ob_get_clean();
             $view = new \App\Views\TemplateView(
                 '/',
-                $result
+                $result,
+                null,
+                $currentUser,
+                $view->shouldDisplayComments(),
             );
             $view->show();
             http_response_code(500);
@@ -55,12 +76,21 @@ class Router {
         }
     }
 
-    private function createView(string $slug): ?\App\Views\View {
+    private function createView(
+        string $slug,
+        \App\Core\Database $db,
+    ): ?\App\Views\View {
         switch ($slug) {
         case '/software/':
             return \App\Views\SoftwareView::create();
         case '/blog/':
             return \App\Views\BlogView::create();
+        case '/register/':
+            return new \App\Views\RegisterView($db);
+        case '/login/':
+            return new \App\Views\LoginView($db);
+        case '/logout/':
+            return new \App\Views\LogoutView($db);
         }
 
         $path = $this->findContentFilePath($slug);

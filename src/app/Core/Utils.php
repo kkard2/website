@@ -51,6 +51,28 @@ class Utils {
         return $content;
     }
 
+    public static function processAllAutousernames(string $content): string {
+        return preg_replace("/\\/u\\/([a-zA-Z0-9_]+)/", "<a class='user-link' href='/u/$1'>/u/$1</a>", $content);
+    }
+
+    public static function resetSession(): void {
+        $_SESSION = [];
+        session_destroy();
+        if ((bool)ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            assert($params["path"] !== null);
+            assert($params["domain"] !== null);
+            assert($params["secure"] !== null);
+            assert($params["httponly"] !== null);
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+            );
+        }
+        session_start();
+        session_regenerate_id(true);
+    }
+
     private static function processAutolinks(
         string $tag,
         string $content

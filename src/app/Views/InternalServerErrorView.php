@@ -9,4 +9,6 @@ class InternalServerErrorView implements View {
     public function show(): void {
         echo "<h1>500 Internal Server Error</h1>$this->message";
     }
+
+    public function shouldDisplayComments(): bool { return false; }
 }

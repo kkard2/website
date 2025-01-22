@@ -4,7 +4,10 @@ namespace App\Views;
 class TemplateView implements View {
     public function __construct(
         private readonly string $slug,
-        private readonly string $inner
+        private readonly string $inner,
+        private readonly ?\App\Core\Database $db,
+        private readonly ?\App\Models\UserUsernameModel $currentUser,
+        private readonly bool $showComments = true,
     ) {}
 
     public function show(): void {
@@ -30,18 +33,58 @@ class TemplateView implements View {
                         <a href="/people">/people</a>
                         <a href="/ophs">/ophs</a>
                     </div>
+                    <div class="menu-user">
+<?php
+        if ($this->currentUser === null) {
+            echo '<a href="/login">[log in]</a> <a href="/register">[register]</a>';
+        } else {
+            echo '/u/' . $this->currentUser->username . ' <a href="/logout">[log out]</a>';
+        }
+?>
+                    </div>
                 </div>
             </nav>
         </header>
         <div>
 <?php
         echo $this->inner;
-        // maybe don't do comments always?
+
+        if ($this->db !== null && $this->showComments) {
+            $this->showComments($this->db);
+        }
 ?>
-            <h1>comments</h1>
         </div>
     </body>
 </html>
 <?php
+    }
+
+    public function shouldDisplayComments(): bool {
+        return $this->showComments;
+    }
+
+    private function showComments(\App\Core\Database $db): void {
+        echo '<h1>comments</h1>';
+        $comments = $db->getPageComments($this->slug);
+
+        if (count($comments) == 0) {
+            echo 'there are no comments';
+        } else {
+            foreach ($comments as $c) {
+?>
+            <div class='user-comment'>
+                <span id='<?= "/c/$c->id"; ?>' class='user-comment-header'>
+                    <?= "/c/$c->id "; ?>
+                    <?= "/u/$c->posterUsername "; ?>
+                    <?= is_null($c->replyToId) ? "" : "in reply to /c/$c->replyToId "; ?>
+                    <!-- TODO: buttons -->
+                </span>
+                <div class='user-comment-content'>
+                    <?= htmlspecialchars($c->content); ?>
+                </div>
+            </div>
+<?php
+            }
+        }
     }
 }

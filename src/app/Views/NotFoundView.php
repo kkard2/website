@@ -11,6 +11,8 @@ class NotFoundView implements View {
     }
 
     public function show(): void {
-        echo "<h1>404 Not Found</h1>Page '$this->slug' does not exist";
+        echo "<h1>404 Not Found</h1>Page 'kkard2$this->slug' does not exist";
     }
+
+    public function shouldDisplayComments(): bool { return false; }
 }

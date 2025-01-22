@@ -55,4 +55,6 @@ i will post sometimes i promise
 </ul>
 <?php
     }
+
+    public function shouldDisplayComments(): bool { return true; }
 }

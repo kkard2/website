@@ -9,4 +9,6 @@ class StringView implements View {
     public function show(): void {
         echo $this->content;
     }
+
+    public function shouldDisplayComments(): bool { return true; }
 }

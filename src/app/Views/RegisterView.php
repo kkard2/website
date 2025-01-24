@@ -47,9 +47,12 @@ class RegisterView implements View {
 
             if ($parentId === null) {
                 $errors[] = 'invalid parent key';
+                // TODO: some form of spam detection
             }
 
-            // TODO: check duplicate usernames
+            if ($this->db->getUser($username) !== null) {
+                $errors[] = 'user with this username already exists';
+            }
 
             if (count($errors) !== 0) {
                 echo '<br><div class="error">';
@@ -64,7 +67,7 @@ class RegisterView implements View {
                     $password,
                     $parentId,
                 )) {
-                    echo "registered <a href='/u/$username'>/u/$username</a> successfully<br>";
+                    echo "<br>registered /u/$username successfully<br><br>";
                     echo '<a href="/login">/login</a>';
                 } else {
                     throw new \Exception('could not register user for unknown reason');

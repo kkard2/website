@@ -3,6 +3,7 @@ namespace App\Core;
 
 use \App\Models\PageCommentModel;
 use \App\Models\UserUsernameModel;
+use \App\Models\UserItemModel;
 
 class Database {
     private function __construct(
@@ -64,7 +65,7 @@ class Database {
     public function registerUser(
         string $username,
         string $password,
-        string $parentId,
+        int $parentId,
     ): bool {
         $stmt = $this->connection->prepare(
             'INSERT INTO users ' .
@@ -74,16 +75,29 @@ class Database {
         );
         $password = password_hash($password, PASSWORD_DEFAULT);
         $stmt->bind_param(
-            'sss',
+            'ssi',
             $username,
             $password,
             $parentId,
         );
         $stmt->execute();
-        return $stmt->affected_rows > 0;
+        $result = $stmt->affected_rows > 0;
+
+        $stmt = $this->connection->prepare('
+            UPDATE
+                users
+            SET
+                parentKey = NULL
+            WHERE
+                id = ?
+        ');
+        $stmt->bind_param('i', $parentId);
+        $stmt->execute();
+
+        return $result;
     }
 
-    public function validateParentKey(string $parentKey): ?string {
+    public function validateParentKey(string $parentKey): ?int {
         $stmt = $this->connection->prepare(
             'SELECT ' .
             'id ' .
@@ -99,7 +113,7 @@ class Database {
             return null;
         }
 
-        return (string)$row['id'];
+        return (int)$row['id'];
     }
 
     public function getUserBySession(string $sessionId): ?UserUsernameModel {
@@ -107,7 +121,8 @@ class Database {
         $stmt = $this->connection->prepare(
             'SELECT ' .
             'users.id AS id, ' .
-            'users.username AS username ' .
+            'users.username AS username, ' .
+            'users.admin AS admin ' .
             'FROM sessions ' .
             'INNER JOIN users ON users.id = sessions.userId ' .
             'WHERE sessions.id = ? '
@@ -122,8 +137,9 @@ class Database {
         }
 
         $result = new UserUsernameModel(
-            (string)$row['id'],
-            (string)$row['username']
+            (int)$row['id'],
+            (string)$row['username'],
+            (bool)$row['admin'],
         );
 
         // TODO: change to INTERVAL 14 DAY
@@ -193,6 +209,137 @@ class Database {
         ');
         $stmt->bind_param('s', $sessionId);
         $stmt->execute();
+    }
+
+    public function getUser(string $username): ?\App\Models\UserModel {
+        $stmt = $this->connection->prepare('
+            SELECT
+                child.id AS id,
+                child.username AS username,
+                child.admin AS admin,
+                child.bio AS bio,
+                parent.username AS parentUsername,
+                child.parentKey AS parentKey
+            FROM
+                users AS child
+            LEFT JOIN
+                users AS parent
+            ON
+                child.parentId = parent.id
+            WHERE
+                child.username = ?
+        ');
+        $stmt->bind_param('s', $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+
+        if ($row === null) {
+            return null;
+        }
+
+        return new \App\Models\UserModel(
+            (int)$row['id'],
+            (string)$row['username'],
+            (bool)$row['admin'],
+            $row['bio'] !== null ? (string)$row['bio'] : null,
+            $row['parentUsername'] !== null ? (string)$row['parentUsername'] : null,
+            $row['parentKey'] !== null ? (string)$row['parentKey'] : null,
+        );
+    }
+
+    /** @return list<UserItemModel> */
+    public function getChildren(int $userId): array {
+        $stmt = $this->connection->prepare('
+            SELECT
+                child.id AS id,
+                child.username AS username,
+                child.hide AS hide
+            FROM
+                users AS child
+            INNER JOIN
+                users AS parent
+            ON
+                child.parentId = parent.id
+            WHERE
+                parent.id = ?
+        ');
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $children = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $children[] = new UserItemModel(
+                (int)$row['id'],
+                (string)$row['username'],
+                (bool)$row['hide'],
+            );
+        }
+
+        return $children;
+    }
+
+    public function getParentKey(int $userId): ?string {
+        $stmt = $this->connection->prepare('
+            SELECT
+                parentKey
+            FROM
+                users
+            WHERE
+                id = ?
+        ');
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+
+        if ($row === null || $row['parentKey'] === null) {
+            return null;
+        }
+
+        return (string)$row['parentKey'];
+    }
+
+    public function createParentKey(int $userId): string {
+        $result = bin2hex(random_bytes(32));
+        $stmt = $this->connection->prepare('
+            UPDATE
+                users
+            SET
+                parentKey = ?
+            WHERE
+                id = ?
+        ');
+        $stmt->bind_param('ss', $result, $userId);
+        $stmt->execute();
+
+        if ($stmt->affected_rows !== 1) {
+            throw new \Exception("failed to create parent key");
+        }
+
+        return (string)$result;
+    }
+
+    /** @return list<string> */
+    public function getAllUserUsernames(): array {
+        $stmt = $this->connection->prepare('
+            SELECT
+                username
+            FROM
+                users
+        ');
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $users = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $users[] = (string)$row['username'];
+        }
+
+        return $users;
     }
 
     private function dropInvalidSessions(): void {

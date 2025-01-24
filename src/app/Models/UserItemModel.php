@@ -1,10 +1,10 @@
 <?php
 namespace App\Models;
 
-class UserUsernameModel {
+class UserItemModel {
     public function __construct(
         public readonly int $id,
         public readonly string $username,
-        public readonly bool $admin,
+        public readonly bool $hide,
     ) {}
 }

@@ -52,7 +52,12 @@ class Utils {
     }
 
     public static function processAllAutousernames(string $content): string {
-        return preg_replace("/\\/u\\/([a-zA-Z0-9_]+)/", "<a class='user-link' href='/u/$1'>/u/$1</a>", $content);
+        // https://regexlicensing.org/
+        return preg_replace(
+            "/\\/u\\/([a-zA-Z0-9_]+)(?!.*?<\\/title>)/",
+            "<a class='user-link' href='/u/$1'>/u/$1</a>",
+            $content
+        );
     }
 
     public static function resetSession(): void {

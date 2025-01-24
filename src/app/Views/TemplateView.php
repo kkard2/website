@@ -32,11 +32,12 @@ class TemplateView implements View {
                         <a href="/rss">/rss</a>
                         <a href="/people">/people</a>
                         <a href="/ophs">/ophs</a>
+                        <a href="/family">/family</a>
                     </div>
                     <div class="menu-user">
 <?php
         if ($this->currentUser === null) {
-            echo '<a href="/login">[log in]</a> <a href="/register">[register]</a>';
+            echo '<a href="/login">/login</a> <a href="/register">/register</a>';
         } else {
             echo '/u/' . $this->currentUser->username . ' <a href="/logout">[log out]</a>';
         }
@@ -66,6 +67,14 @@ class TemplateView implements View {
     private function showComments(\App\Core\Database $db): void {
         echo '<h1>comments</h1>';
         $comments = $db->getPageComments($this->slug);
+
+        if ($this->currentUser !== null) {
+?>
+<form method='post'>
+
+</form>
+<?php
+        }
 
         if (count($comments) == 0) {
             echo 'there are no comments';

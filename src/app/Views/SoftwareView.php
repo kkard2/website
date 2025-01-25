@@ -2,11 +2,11 @@
 namespace App\Views;
 
 use \App\Core\Utils;
-use \App\Core\SoftwareViewEntry;
+use \App\Models\PostEntryModel;
 
 class SoftwareView implements View {
     private function __construct(
-        /** @var list<SoftwareViewEntry> */
+        /** @var list<PostEntryModel> */
         private readonly array $entries,
     ) {}
 
@@ -14,7 +14,7 @@ class SoftwareView implements View {
         $basePath = realpath('content/software/');
 
         if ($basePath === false) {
-            throw new \Exception('Cannot read content');
+            throw new \Exception('cannot read content');
         }
 
         $entries = [];
@@ -32,20 +32,20 @@ class SoftwareView implements View {
                 continue;
             }
 
-            $content = \App\Models\ContentPageModel::fromFile($filePath);
+            $content = \App\Models\ContentPageModel::fromFile($filePath, "/software/$partialSlug");
             if ($content === null) {
                 // TODO: log warning?
                 continue;
             }
 
             $dateTime = $content->getMetaDateTime() ?? $dateTime;
-            $entries[] = new SoftwareViewEntry($dateTime, $content);
+            $entries[] = new PostEntryModel($dateTime, $content);
         }
 
         usort($entries, function ($a, $b) {
-            assert($a instanceof SoftwareViewEntry);
-            assert($b instanceof SoftwareViewEntry);
-            return $a->dateTime <=> $b->dateTime;
+            assert($a instanceof PostEntryModel);
+            assert($b instanceof PostEntryModel);
+            return $b->dateTime <=> $a->dateTime;
         });
 
         return new SoftwareView($entries);
@@ -72,6 +72,8 @@ also, check out <a href='/ophs'>/ophs</a> (other people hating software)
                 echo "</h2>";
             }
             echo $entry->contentPage->getContent();
+            $slug = $entry->contentPage->slug;
+            echo "<a href='$slug'>[comments]</a>";
         }
     }
 

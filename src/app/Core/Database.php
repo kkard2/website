@@ -38,11 +38,14 @@ class Database {
             'comments.id AS id, ' .
             'comments.replyToId AS replyToId, ' .
             'comments.content AS content, ' .
-            'users.username AS posterUsername ' .
+            'comments.postedAt AS postedAt, ' .
+            'users.username AS posterUsername, ' .
+            'comments.slug AS slug ' .
             'FROM comments ' .
             'INNER JOIN users ON users.id = comments.posterId ' .
             'WHERE comments.hide = FALSE ' .
-            '  AND comments.slug = ? '
+            '  AND comments.slug = ? ' .
+            'ORDER BY postedAt DESC '
         );
         $stmt->bind_param('s', $slug);
         $stmt->execute();
@@ -54,8 +57,16 @@ class Database {
             $comments[] = new PageCommentModel(
                 (string)$row['id'],
                 is_null($row['replyToId']) ? null : (string)$row['replyToId'],
-                (string)$row['content'],
+                // NOTE: i am escaping comments that are stored in the database as is.
+                //       this might be bad, because if i forget about it i get xss
+                //       for free, but it simplifies adding it to the database logic
+                //       (i don't need to count encoding overhead for comment length)
+                // TODO: think about this for more than 5 seconds and
+                //       potentialy switch to encoding it beforehand
+                Utils::escapeDatabaseHtml((string)$row['content']),
+                (string)$row['postedAt'],
                 (string)$row['posterUsername'],
+                (string)$row['slug'],
             );
         }
 
@@ -142,10 +153,9 @@ class Database {
             (bool)$row['admin'],
         );
 
-        // TODO: change to INTERVAL 14 DAY
         $stmt = $this->connection->prepare('
             UPDATE sessions
-            SET validUntil = DATE_ADD(NOW(), INTERVAL 1 HOUR)
+            SET validUntil = DATE_ADD(NOW(), INTERVAL 14 DAY)
             WHERE sessions.id = ?
         ');
         $stmt->bind_param('s', $sessionId);
@@ -189,12 +199,11 @@ class Database {
             return 'you have been disowned';
         }
 
-        // TODO: change to INTERVAL 14 DAY
         $stmt = $this->connection->prepare('
             INSERT INTO sessions
             (id, userId, validUntil)
             VALUES
-            (?, ?, DATE_ADD(NOW(), INTERVAL 1 HOUR))
+            (?, ?, DATE_ADD(NOW(), INTERVAL 14 DAY))
         ');
         $stmt->bind_param('ss', $currentSession, $id);
         $stmt->execute();
@@ -217,6 +226,7 @@ class Database {
                 child.id AS id,
                 child.username AS username,
                 child.admin AS admin,
+                child.hide AS hide,
                 child.bio AS bio,
                 parent.username AS parentUsername,
                 child.parentKey AS parentKey
@@ -242,6 +252,7 @@ class Database {
             (int)$row['id'],
             (string)$row['username'],
             (bool)$row['admin'],
+            (bool)$row['hide'],
             $row['bio'] !== null ? (string)$row['bio'] : null,
             $row['parentUsername'] !== null ? (string)$row['parentUsername'] : null,
             $row['parentKey'] !== null ? (string)$row['parentKey'] : null,
@@ -329,6 +340,8 @@ class Database {
                 username
             FROM
                 users
+            WHERE
+                hide = FALSE
         ');
         $stmt->execute();
         $result = $stmt->get_result();
@@ -340,6 +353,154 @@ class Database {
         }
 
         return $users;
+    }
+
+    public function postComment(
+        int $userId,
+        string $comment,
+        string $slug,
+    ): int {
+        // TODO: support replies
+        $stmt = $this->connection->prepare('
+            INSERT INTO comments
+                (posterId, content, slug, hide, replyToId, postedAt)
+            VALUES
+                (?, ?, ?, FALSE, NULL, NOW())
+        ');
+        $stmt->bind_param('iss', $userId, $comment, $slug);
+        $stmt->execute();
+        return (int)$stmt->insert_id;
+    }
+
+    public function getCommentSlug(
+        int $commentId,
+    ): ?string {
+        $stmt = $this->connection->prepare('
+            SELECT
+                slug
+            FROM
+                comments
+            WHERE
+                id = ?
+        ');
+        $stmt->bind_param('i', $commentId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $row = $result->fetch_assoc();
+
+        if ($row === null || $row['slug'] === null) {
+            return null;
+        }
+
+        return (string)$row['slug'];
+    }
+
+    public function removeComment(int $commentId): bool {
+        $stmt = $this->connection->prepare('
+            UPDATE
+                comments
+            SET
+                hide = TRUE
+            WHERE
+                id = ?
+        ');
+        $stmt->bind_param('i', $commentId);
+        $stmt->execute();
+        return $stmt->affected_rows > 0;
+    }
+
+    public function disown(int $userId): void {
+        $stmt = $this->connection->prepare('
+            UPDATE
+                users
+            SET
+                hide = TRUE
+            WHERE
+                id = ?
+        ');
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        // get rid of orphans
+        $stmt = $this->connection->prepare('
+            UPDATE
+                users AS child
+            INNER JOIN
+                users AS parent
+            ON
+                parent.id = child.parentId
+            SET
+                child.hide = TRUE
+            WHERE
+                parent.hide = TRUE
+        ');
+
+        do {
+            $stmt->execute();
+        } while ($stmt->affected_rows > 0);
+    }
+
+    public function adopt(int $parentId, int $orphanId): void {
+        $stmt = $this->connection->prepare('
+            UPDATE
+                users
+            SET
+                parentId = ?,
+                hide = FALSE
+            WHERE
+                id = ?
+        ');
+        $stmt->bind_param('ii', $parentId, $orphanId);
+        $stmt->execute();
+    }
+
+    public function setBio(int $userId, ?string $bio): void {
+        $stmt = $this->connection->prepare('
+            UPDATE
+                users
+            SET
+                bio = ?
+            WHERE
+                id = ?
+        ');
+        // yea, xss situation the same as in comments
+        $stmt->bind_param('si', $bio, $userId);
+        $stmt->execute();
+    }
+
+    /** @return list<PageCommentModel> */
+    public function getAllComments(): array {
+        $stmt = $this->connection->prepare(
+            'SELECT ' .
+            'comments.id AS id, ' .
+            'comments.replyToId AS replyToId, ' .
+            'comments.content AS content, ' .
+            'comments.postedAt AS postedAt, ' .
+            'users.username AS posterUsername, ' .
+            'comments.slug AS slug ' .
+            'FROM comments ' .
+            'INNER JOIN users ON users.id = comments.posterId ' .
+            'WHERE comments.hide = FALSE ' .
+            'ORDER BY postedAt DESC '
+        );
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $comments = [];
+
+        while ($row = $result->fetch_assoc()) {
+            $comments[] = new PageCommentModel(
+                (string)$row['id'],
+                is_null($row['replyToId']) ? null : (string)$row['replyToId'],
+                // NOTE: same as getPageComments
+                Utils::escapeDatabaseHtml((string)$row['content']),
+                (string)$row['postedAt'],
+                (string)$row['posterUsername'],
+                (string)$row['slug'],
+            );
+        }
+
+        return $comments;
     }
 
     private function dropInvalidSessions(): void {

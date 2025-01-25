@@ -6,6 +6,8 @@ class PageCommentModel {
         public readonly string $id,
         public readonly ?string $replyToId,
         public readonly string $content,
+        public readonly string $postedAt,
         public readonly string $posterUsername,
+        public readonly string $slug,
     ) {}
 }

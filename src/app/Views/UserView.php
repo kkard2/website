@@ -15,6 +15,10 @@ class UserView implements View {
             throw new \App\Exceptions\NotFoundException("/u/$this->username/");
         }
 
+        if ($user->hide) {
+            echo '<del>';
+        }
+
         $isOwner = $this->currentUser !== null && $user->id === $this->currentUser->id;
         $isAdmin = $this->currentUser !== null && $this->currentUser->admin;
 
@@ -22,8 +26,8 @@ class UserView implements View {
 ?>
 <h1>/u/<?= $user->username; ?> <?= $isOwner ? ' (you)' : ''; ?></h1>
 <?php
-        echo $user->bio !== null
-            ? $user->bio
+        echo $user->escapedBio() !== null
+            ? $user->escapedBio()
             : '<span class="comment">no bio</span>';
 
         if ($isOwner) {
@@ -49,19 +53,19 @@ class UserView implements View {
                 echo '<li>';
                 if ($isOwner) {
                     if ($child->hide) {
-                        echo "<a href='/cmd/adopt?username=$child->username'>[adopt]</a>";
+                        echo "<a href='/adopt?username=$child->username'>[adopt]</a>&nbsp;";
                     } else {
-                        echo "<a href='/cmd/disown?username=$child->username'>[disown]</a>";
+                        echo "<a href='/disown?username=$child->username'>[disown]</a>";
                     }
                 } elseif ($isAdmin) {
-                    echo "<a href='/cmd/adopt?username=$child->username'>[adopt]</a>";
-                    // adoption is needed before disown so current parent can't adopt again
-                    echo "<a href='/cmd/adoptdisown?username=$child->username'>[adopt&disown]</a>";
+                    echo "<a href='/adopt?username=$child->username'>[adopt]</a> ";
+                    echo "<a href='/disown?username=$child->username'>[disown]</a>";
                 }
+                echo ' ';
                 if ($child->hide) {
                     echo '<del>';
                 }
-                echo " /u/$child->username";
+                echo "/u/$child->username";
                 if ($child->hide) {
                     echo '</del>';
                 }
@@ -86,6 +90,10 @@ class UserView implements View {
             } else {
                 echo '<a href="?showparentkey">[show]</a>';
             }
+        }
+
+        if ($user->hide) {
+            echo '</del>';
         }
     }
 

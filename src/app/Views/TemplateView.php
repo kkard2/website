@@ -33,6 +33,12 @@ class TemplateView implements View {
                         <a href="/people">/people</a>
                         <a href="/ophs">/ophs</a>
                         <a href="/family">/family</a>
+                        <a href="/activity">/activity</a>
+<?php
+        if ($this->currentUser !== null && $this->currentUser->admin) {
+            echo '<a href="/cms/software">/cms/software</a>';
+        }
+?>
                     </div>
                     <div class="menu-user">
 <?php
@@ -66,15 +72,35 @@ class TemplateView implements View {
 
     private function showComments(\App\Core\Database $db): void {
         echo '<h1>comments</h1>';
-        $comments = $db->getPageComments($this->slug);
 
         if ($this->currentUser !== null) {
+            if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
+                $comment = isset($_POST['comment']) && is_string($_POST['comment'])
+                    ? $_POST['comment']
+                    : '';
+                if ($comment === '') {
+                    // this is not possible thru ui, just ignore
+                } else {
+                    // NOTE: if someone posted comment > 1000 chars this will
+                    //       either throw or truncate, i'm fine with both
+                    // NOTE: this does not allow xss, see Database::getPageComments
+                    $commentId = $db->postComment($this->currentUser->id, $comment, $this->slug);
+                    // prevents refresh resubmitting form
+                    header("Location: $this->slug#c$commentId");
+                }
+
+            }
 ?>
 <form method='post'>
-
-</form>
+    <div class='textarea-wrapper'>
+        <textarea required maxlength='1000' rows='6' name='comment'></textarea><br>
+    </div>
+    <button type='submit' value='postcomment'>post</button>
+</form><br>
 <?php
         }
+
+        $comments = $db->getPageComments($this->slug);
 
         if (count($comments) == 0) {
             echo 'there are no comments';
@@ -82,14 +108,19 @@ class TemplateView implements View {
             foreach ($comments as $c) {
 ?>
             <div class='user-comment'>
-                <span id='<?= "/c/$c->id"; ?>' class='user-comment-header'>
-                    <?= "/c/$c->id "; ?>
-                    <?= "/u/$c->posterUsername "; ?>
+                <span id='<?= "c$c->id"; ?>' class='user-comment-header'>
+                    <?=
+                        "/c/$c->id by /u/$c->posterUsername @ $c->postedAt ";
+                    ?>
+<?php
+                if ($this->currentUser !== null && $this->currentUser->admin) {
+                    echo "<a href='/removecomment?id=$c->id'>[remove]</a>";
+                }
+?>
                     <?= is_null($c->replyToId) ? "" : "in reply to /c/$c->replyToId "; ?>
-                    <!-- TODO: buttons -->
                 </span>
                 <div class='user-comment-content'>
-                    <?= htmlspecialchars($c->content); ?>
+                    <?= $c->content; ?>
                 </div>
             </div>
 <?php

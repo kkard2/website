@@ -3,13 +3,26 @@ namespace App\Core;
 
 class Router {
     public function handleRequest(string $uri): void {
+        if (str_ends_with($uri, '.xml')) {
+            switch ($uri) {
+            case '/software/index.xml':
+                (new \App\Feeds\SoftwareFeed())->show();
+                return;
+            case '/blog/index.xml':
+                (new \App\Feeds\BlogFeed())->show();
+                return;
+            }
+        }
+
         session_start();
-        $content = Router::showViewRaw($uri);
+        $slug = $this->uriToCanonicalSlug($uri);
+        $content = Router::showViewRaw($uri, $slug);
         $content = \App\Core\Utils::processAllAutolinks($content);
+        $content = \App\Core\Utils::processAllAutocomments($content);
         echo \App\Core\Utils::processAllAutousernames($content);
     }
 
-    private function showViewRaw(string $uri): string {
+    private function showViewRaw(string $uri, string $slug): string {
         // TODO: this should probably be rewritten, looks ugly
         //       also maybe not being in the router
         ob_start();
@@ -24,7 +37,6 @@ class Router {
 
             $currentUser = $db->getUserBySession(session_id());
 
-            $slug = $this->uriToCanonicalSlug($uri);
             $view = $this->createView($slug, $db, $currentUser);
 
             if ($view === null) {
@@ -49,6 +61,9 @@ class Router {
         } catch (\App\Exceptions\ForbiddenException $e) {
             $view = new \App\Views\ForbiddenErrorView($e->getMessage());
             return $this->createErrorContent($view, $currentUser, 403);
+        } catch(\App\Exceptions\BadRequestException $e) {
+            $view = new \App\Views\BadRequestErrorView($e->getMessage());
+            return $this->createErrorContent($view, $currentUser, 400);
         } catch (\Exception $e) {
             // TODO: consider not using raw getMessage for security reasons
             $view = new \App\Views\InternalServerErrorView($e->getMessage());
@@ -84,6 +99,8 @@ class Router {
         ?\App\Models\UserUsernameModel $currentUser,
     ): ?\App\Views\View {
         switch ($slug) {
+        case '/menu/':
+            return new \App\Views\MenuView($currentUser);
         case '/software/':
             return \App\Views\SoftwareView::create();
         case '/blog/':
@@ -96,6 +113,20 @@ class Router {
             return new \App\Views\LogoutView($db);
         case '/family/':
             return new \App\Views\FamilyView($db);
+        case '/activity/':
+            return new \App\Views\ActivityView($db, $currentUser);
+
+        case '/removecomment/':
+            return new \App\Views\RemoveCommentView($db, $currentUser);
+        case '/disown/':
+            return new \App\Views\DisownView($db, $currentUser);
+        case '/adopt/':
+            return new \App\Views\AdoptView($db, $currentUser);
+        case '/editbio/':
+            return new \App\Views\EditBioView($db, $currentUser);
+
+        case '/cms/software/':
+            return new \App\Views\Cms\SoftwareCmsView($db, $currentUser);
         }
 
         if (str_starts_with($slug, '/u/')) {
@@ -105,13 +136,24 @@ class Router {
             return new \App\Views\UserView($db, $username, $currentUser);
         }
 
+        if (str_starts_with($slug, '/c/')) {
+            $id = substr($slug, 3);
+            $id = substr($id, 0, strlen($id) - 1);
+            $slug = $db->getCommentSlug((int)$id);
+            if ($slug !== null) {
+                // TODO: this is stupid
+                return new \App\Views\RedirectView("$slug#c$id");
+            }
+            return null;
+        }
+
         $path = $this->findContentFilePath($slug);
 
         if ($path === null) {
             return null;
         }
 
-        $content = \App\Models\ContentPageModel::fromFile($path);
+        $content = \App\Models\ContentPageModel::fromFile($path, $slug);
 
         if ($content === null) {
             return null;

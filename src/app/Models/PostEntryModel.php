@@ -1,7 +1,7 @@
 <?php
-namespace App\Core;
+namespace App\Models;
 
-class SoftwareViewEntry {
+class PostEntryModel {
     public function __construct(
         public readonly \DateTimeImmutable $dateTime,
         public readonly \App\Models\ContentPageModel $contentPage

@@ -60,6 +60,14 @@ class Utils {
         );
     }
 
+    public static function processAllAutocomments(string $content): string {
+        return preg_replace(
+            "/\\/c\\/([0-9]+)(?!.*?<\\/title>|['\"])/",
+            "<a href='/c/$1'>/c/$1</a>",
+            $content
+        );
+    }
+
     public static function resetSession(): void {
         $_SESSION = [];
         session_destroy();
@@ -78,12 +86,15 @@ class Utils {
         session_regenerate_id(true);
     }
 
+    public static function escapeDatabaseHtml(string $comment): string {
+        return nl2br(htmlspecialchars($comment), false);
+    }
+
     private static function processAutolinks(
         string $tag,
         string $content
     ): string {
         $offset = 0;
-
         $newContent = '';
 
         while (true) {

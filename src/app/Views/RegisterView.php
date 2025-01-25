@@ -22,7 +22,7 @@ class RegisterView implements View {
                 $errors[] = 'username is required';
             } elseif (strlen($username) < 1 || strlen($username) > 20) {
                 $errors[] = 'username is not between 2 and 20 characters long';
-            } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
+            } elseif (!preg_match('/^[a-z0-9_]+$/', $username)) {
                 $errors[] = 'username can only contain letters, numbers, and underscores';
             }
 
@@ -91,8 +91,8 @@ class RegisterView implements View {
         name='username'
         value='<?= htmlspecialchars($username); ?>'
         required
-        pattern='[a-zA-Z0-9_]{2,20}'
-        title='username must be 2-20 characters long and can only contain letters, numbers, and underscores'></div>
+        pattern='[a-z0-9_]{2,20}'
+        title='username must be 2-20 characters long and can only contain lowercase letters, numbers, and underscores'></div>
     <br>
 
     <label style='<?= $labelStyle; ?>' for='password'>password:</label>

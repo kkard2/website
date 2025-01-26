@@ -2,10 +2,11 @@ live site is available @ [kkard2.com](https://kkard2.com/)
 
 # apache
 
+## Windows (XAMPP)
+
 NOTE: this will break all other projects inside `htdocs/`, so backing up
       configuration file is advised.
 
-## Windows (XAMPP)
 - `{{XAMPP_DIR}}\apache\conf\httpd.conf`
 
 ```

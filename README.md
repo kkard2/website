@@ -1,6 +1,8 @@
-# Apache settings
+live site is available @ [kkard2.com](https://kkard2.com/)
 
-NOTE: This will break all other projects inside `htdocs/`, so backing up
+# apache
+
+NOTE: this will break all other projects inside `htdocs/`, so backing up
       configuration file is advised.
 
 ## Windows (XAMPP)
@@ -26,3 +28,12 @@ LoadModule rewrite_module modules/mod_rewrite.so
 
 ## Linux
 good luck
+
+# mysql
+- import `DO_NOT_USE_IN_PRODUCTION.sql` as `kkard2`
+- every password is `12345678`
+- admin username is `kkard2`
+- there are test accounts `test1`, `test2` & `test3` (banned)
+
+# php
+php 8.1 is required (at least that's what my vps is running)

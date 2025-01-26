@@ -14,7 +14,7 @@ class Router {
             }
         }
 
-        session_set_cookie_params(3600, '/');
+        session_set_cookie_params(60 * 60 * 24 * 14, '/');
         session_start();
         $slug = $this->uriToCanonicalSlug($uri);
         $content = Router::showViewRaw($uri, $slug);

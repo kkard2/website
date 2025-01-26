@@ -114,7 +114,7 @@ class SoftwareCmsView implements \App\Views\View {
 </form>
 <h1>file</h1>
 <form method='post' enctype='multipart/form-data'>
-    <label for='file'>Choose file:</label>
+    <label for='file'>choose file:</label>
     <div class='input-wrapper'>
         <input type='file' name='file' id='file' required>
     </div><br>

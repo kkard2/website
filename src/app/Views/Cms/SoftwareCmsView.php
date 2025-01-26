@@ -137,7 +137,6 @@ class SoftwareCmsView implements \App\Views\View {
         $repoPath = realpath('../');
         chdir($repoPath);
 
-        $output = [];
         exec('git add .', $output, $returnVar);
         if ($returnVar !== 0) {
             /** @psalm-suppress MixedArgumentTypeCoercion */
@@ -147,7 +146,7 @@ class SoftwareCmsView implements \App\Views\View {
 
         $datetime = new \DateTime();
         $datetime = $datetime->format('Y-m-d H:m:s');
-        $output = null;
+        unset($output);
         exec("git commit -m \"AUTO: $datetime\"", $output, $returnVar);
 
         if ($returnVar !== 0) {
@@ -156,7 +155,7 @@ class SoftwareCmsView implements \App\Views\View {
             echo "git commit error: $output";
         }
 
-        $output = null;
+        unset($output);
         exec('git push', $output, $returnVar);
         if ($returnVar !== 0) {
             /** @psalm-suppress MixedArgumentTypeCoercion */

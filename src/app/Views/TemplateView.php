@@ -117,7 +117,6 @@ class TemplateView implements View {
                     echo "<a href='/removecomment?id=$c->id'>[remove]</a>";
                 }
 ?>
-                    <?= is_null($c->replyToId) ? "" : "in reply to /c/$c->replyToId "; ?>
                 </span>
                 <div class='user-comment-content'>
                     <?= $c->content; ?>

@@ -124,6 +124,10 @@ class Router {
             return new \App\Views\AdoptView($db, $currentUser);
         case '/editbio/':
             return new \App\Views\EditBioView($db, $currentUser);
+        case '/logoutall/':
+            return new \App\Views\LogoutAllView($db, $currentUser);
+        case '/changepassword/':
+            return new \App\Views\ChangePasswordView($db, $currentUser);
 
         case '/cms/software/':
             return new \App\Views\Cms\SoftwareCmsView($db, $currentUser);

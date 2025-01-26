@@ -52,12 +52,20 @@ class SoftwareCmsView implements \App\Views\View {
                     throw new \Exception("could not create file '$basePath/$y/$m/$d/$filename.html'");
                 }
 
+                $this->performGitCommitPush();
+
                 header('Location: /software');
             } elseif ($submitType === 'submitfile') {
                 if (isset($_FILES['file']) && $_FILES['file']['error'] === 0) {
+                    $filename = isset($_POST['filename']) && is_string($_POST['filename'])
+                        ? $_POST['filename']
+                        : '';
+                    if ($filename === '') {
+                        throw new \App\Exceptions\BadRequestException('no file name provided');
+                    }
+
                     $uploadDirectory = realpath('content/res/software/');
-                    $fileName = basename($_FILES['file']['name']);
-                    $filePath = "$uploadDirectory/" . $fileName;
+                    $filePath = "$uploadDirectory/" . $filename;
 
                     if (file_exists($filePath)) {
                         throw new \App\Exceptions\BadRequestException('file already exists');
@@ -65,6 +73,8 @@ class SoftwareCmsView implements \App\Views\View {
                         if (!move_uploaded_file($_FILES['file']['tmp_name'], $filePath)) {
                             throw new \Exception('uploading file failed');
                         }
+
+                        $this->performGitCommitPush();
                     }
                 } else {
                     throw new \Exception('uploading file failed');
@@ -110,10 +120,22 @@ class SoftwareCmsView implements \App\Views\View {
     <div class='input-wrapper'>
         <input type='file' name='file' id='file' required>
     </div><br>
+
+    <label for='filename'>filename:&nbsp;&nbsp;&nbsp;</label>
+    <div class='input-wrapper'><input
+        type='text'
+        id='filename'
+        name='filename'
+        required></div>
+    <br>
     <button type="submit" name='submittype' value='submitfile'>submit</button>
 </form>
 <?php
     }
 
     public function shouldDisplayComments(): bool { return false; }
+
+    private function performGitCommitPush(): void {
+        // TODO
+    }
 }

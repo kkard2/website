@@ -36,7 +36,6 @@ class Database {
         $stmt = $this->connection->prepare(
             'SELECT ' .
             'comments.id AS id, ' .
-            'comments.replyToId AS replyToId, ' .
             'comments.content AS content, ' .
             'comments.postedAt AS postedAt, ' .
             'users.username AS posterUsername, ' .
@@ -56,7 +55,6 @@ class Database {
         while ($row = $result->fetch_assoc()) {
             $comments[] = new PageCommentModel(
                 (string)$row['id'],
-                is_null($row['replyToId']) ? null : (string)$row['replyToId'],
                 // NOTE: i am escaping comments that are stored in the database as is.
                 //       this might be bad, because if i forget about it i get xss
                 //       for free, but it simplifies adding it to the database logic
@@ -162,6 +160,30 @@ class Database {
         $stmt->execute();
 
         return $result;
+    }
+
+    public function checkPassword(
+        int $userId,
+        string $password,
+    ): bool {
+        $stmt = $this->connection->prepare(
+            'SELECT ' .
+            'passwordHash ' .
+            'FROM users ' .
+            'WHERE users.id = ? '
+        );
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+
+        if ($row === null) {
+            return false;
+        }
+
+        $passwordHash = (string)$row['passwordHash'];
+
+        return password_verify($password, $passwordHash);
     }
 
     // returns true on success, otherwise reason
@@ -360,12 +382,11 @@ class Database {
         string $comment,
         string $slug,
     ): int {
-        // TODO: support replies
         $stmt = $this->connection->prepare('
             INSERT INTO comments
-                (posterId, content, slug, hide, replyToId, postedAt)
+                (posterId, content, slug, hide, postedAt)
             VALUES
-                (?, ?, ?, FALSE, NULL, NOW())
+                (?, ?, ?, FALSE, NOW())
         ');
         $stmt->bind_param('iss', $userId, $comment, $slug);
         $stmt->execute();
@@ -473,7 +494,6 @@ class Database {
         $stmt = $this->connection->prepare(
             'SELECT ' .
             'comments.id AS id, ' .
-            'comments.replyToId AS replyToId, ' .
             'comments.content AS content, ' .
             'comments.postedAt AS postedAt, ' .
             'users.username AS posterUsername, ' .
@@ -491,7 +511,6 @@ class Database {
         while ($row = $result->fetch_assoc()) {
             $comments[] = new PageCommentModel(
                 (string)$row['id'],
-                is_null($row['replyToId']) ? null : (string)$row['replyToId'],
                 // NOTE: same as getPageComments
                 Utils::escapeDatabaseHtml((string)$row['content']),
                 (string)$row['postedAt'],
@@ -502,6 +521,34 @@ class Database {
 
         return $comments;
     }
+
+   public function deleteAllSessions(int $userId): void {
+        $stmt = $this->connection->prepare('
+            DELETE FROM sessions
+            WHERE sessions.userId = ?
+        ');
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+   }
+
+   public function changePassword(int $userId, string $newPassword): bool {
+        $stmt = $this->connection->prepare('
+            UPDATE
+                users
+            SET
+                passwordHash = ?
+            WHERE
+                id = ?
+        ');
+        $newPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $stmt->bind_param(
+            'si',
+            $newPassword,
+            $userId,
+        );
+        $stmt->execute();
+        return $stmt->affected_rows > 0;
+   }
 
     private function dropInvalidSessions(): void {
         $stmt = $this->connection->prepare('DELETE FROM sessions WHERE validUntil < NOW()');

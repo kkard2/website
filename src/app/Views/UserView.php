@@ -23,6 +23,11 @@ class UserView implements View {
         $isAdmin = $this->currentUser !== null && $this->currentUser->admin;
 
         $children = $this->db->getChildren($user->id);
+
+        if ($isOwner) {
+            echo '<p><a href="/logoutall">[log out everywhere]</a> <a href="/changepassword">[change password]</a></p>';
+        }
+
 ?>
 <h1>/u/<?= $user->username; ?> <?= $isOwner ? ' (you)' : ''; ?></h1>
 <?php

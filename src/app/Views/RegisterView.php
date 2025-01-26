@@ -20,7 +20,7 @@ class RegisterView implements View {
                 : '';
             if ($username === '') {
                 $errors[] = 'username is required';
-            } elseif (strlen($username) < 1 || strlen($username) > 20) {
+            } elseif (strlen($username) < 2 || strlen($username) > 20) {
                 $errors[] = 'username is not between 2 and 20 characters long';
             } elseif (!preg_match('/^[a-z0-9_]+$/', $username)) {
                 $errors[] = 'username can only contain letters, numbers, and underscores';

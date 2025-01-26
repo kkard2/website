@@ -28,8 +28,13 @@ class Router {
         ob_start();
         $currentUser = null;
         try {
-            // TODO: values from env
-            $db = \App\Core\Database::connect('localhost', 'root', '', 'kkard2');
+            $dbPassword = getenv('DB_PASSWORD');
+
+            if ($dbPassword === false) {
+                $dbPassword = '';
+            }
+
+            $db = \App\Core\Database::connect('localhost', 'root', $dbPassword, 'kkard2');
 
             if ($db === null) {
                 throw new \Exception('could not connect to the database');

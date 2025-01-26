@@ -197,6 +197,7 @@ header a {
     display: none;
     position: absolute;
     top: 100%;
+    margin-top: -1px;
     left: 0;
     background-color: #444;
     z-index: 1;

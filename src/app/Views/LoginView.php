@@ -24,7 +24,7 @@ class LoginView implements View {
 
             $result = $this->db->tryLogIn($username, $password, session_id());
 
-            if ($result === true) {
+            if ($result === null) {
                 echo 'logged in successfuly';
                 header('Location: /');
                 return;

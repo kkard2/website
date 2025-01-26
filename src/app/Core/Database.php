@@ -186,12 +186,12 @@ class Database {
         return password_verify($password, $passwordHash);
     }
 
-    // returns true on success, otherwise reason
+    // returns null on success, otherwise reason
     public function tryLogIn(
         string $username,
         string $password,
         string $currentSession,
-    ): string|true {
+    ): ?string {
         $stmt = $this->connection->prepare(
             'SELECT ' .
             'id, ' .
@@ -230,7 +230,7 @@ class Database {
         $stmt->bind_param('ss', $currentSession, $id);
         $stmt->execute();
 
-        return true;
+        return null;
     }
 
     public function deleteSession(string $sessionId): void {

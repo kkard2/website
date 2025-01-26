@@ -53,8 +53,6 @@ class SoftwareCmsView implements \App\Views\View {
                 }
 
                 $this->performGitCommitPush();
-
-                header('Location: /software');
             } elseif ($submitType === 'submitfile') {
                 if (isset($_FILES['file']) && $_FILES['file']['error'] === 0) {
                     $filename = isset($_POST['filename']) && is_string($_POST['filename'])
@@ -136,6 +134,34 @@ class SoftwareCmsView implements \App\Views\View {
     public function shouldDisplayComments(): bool { return false; }
 
     private function performGitCommitPush(): void {
-        // TODO
+        $repoPath = realpath('../');
+        chdir($repoPath);
+
+        $output = [];
+        exec('git add .', $output, $returnVar);
+        if ($returnVar !== 0) {
+            /** @psalm-suppress MixedArgumentTypeCoercion */
+            $output = implode('\n', $output);
+            echo "git add error: $output";
+        }
+
+        $datetime = new \DateTime();
+        $datetime = $datetime->format('Y-m-d H:m:s');
+        $output = null;
+        exec("git commit -m \"AUTO: $datetime\"", $output, $returnVar);
+
+        if ($returnVar !== 0) {
+            /** @psalm-suppress MixedArgumentTypeCoercion */
+            $output = implode('\n', $output);
+            echo "git commit error: $output";
+        }
+
+        $output = null;
+        exec('git push', $output, $returnVar);
+        if ($returnVar !== 0) {
+            /** @psalm-suppress MixedArgumentTypeCoercion */
+            $output = implode('\n', $output);
+            echo "git push error: $output";
+        }
     }
 }

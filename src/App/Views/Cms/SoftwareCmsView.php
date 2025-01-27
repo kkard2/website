@@ -46,7 +46,10 @@ class SoftwareCmsView implements \App\Views\View {
                     }
                 }
 
+                $datetimeString = $datetime->format('Y-m-d H:m:s');
                 $content = "<h3>$title</h3>\n<div>" . $content . '</div>';
+                $content = "<!-- #title $title -->\n" . $content;
+                $content = "<!-- #datetime $datetimeString -->\n" . $content;
 
                 if (file_put_contents("$basePath/$y/$m/$d/$filename.html", $content) === false) {
                     throw new \Exception("could not create file '$basePath/$y/$m/$d/$filename.html'");

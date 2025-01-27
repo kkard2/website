@@ -54,8 +54,6 @@ class SoftwareCmsView implements \App\Views\View {
 
                 if (file_put_contents($filePath, $content) === false) {
                     throw new \Exception("could not create file '$filePath'");
-                } else {
-                    chmod($filePath, 0666);
                 }
             } elseif ($submitType === 'submitfile') {
                 if (isset($_FILES['file']) && $_FILES['file']['error'] === 0) {
@@ -74,8 +72,6 @@ class SoftwareCmsView implements \App\Views\View {
                     } else {
                         if (!move_uploaded_file($_FILES['file']['tmp_name'], $filePath)) {
                             throw new \Exception('uploading file failed');
-                        } else {
-                            chmod($filePath, 0666);
                         }
                     }
                 } else {

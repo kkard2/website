@@ -366,4 +366,6 @@ textarea {
     height: auto;
     max-height: 20em;
     overflow-y: auto;
+    padding-top: 1px;
+    padding-botton: 1px;
 }

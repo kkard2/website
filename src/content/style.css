@@ -356,13 +356,15 @@ textarea {
 }
 
 .user-comment-content {
-    /* color: #ff0; */
-    /* margin-bottom: 1em; */
-    /* word-wrap: break-word; */
-    /* word-break: break-word; */
-    /* overflow-wrap: break-word; */
-    /* white-space: normal; */
+    color: #ff0;
+    margin-bottom: 1em;
+    word-wrap: break-word;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 
     max-height: 20em;
+    padding-top: 5px;
+    padding-bottom: 5px;
     overflow-y: auto;
 }

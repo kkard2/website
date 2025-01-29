@@ -365,5 +365,5 @@ textarea {
 
     height: auto;
     max-height: 20em;
-    /* overflow-y: auto; */
+    overflow-y: auto;
 }

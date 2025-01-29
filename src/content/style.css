@@ -366,6 +366,4 @@ textarea {
     height: auto;
     max-height: 20em;
     overflow-y: auto;
-    /* chrome issue apparently */
-    scrollbar-gutter: stable;
 }

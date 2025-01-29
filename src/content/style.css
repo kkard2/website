@@ -363,6 +363,7 @@ textarea {
     overflow-wrap: break-word;
     white-space: normal;
 
+    height: auto;
     max-height: 20em;
     overflow-y: auto;
     /* chrome issue apparently */

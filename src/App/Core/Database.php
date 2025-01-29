@@ -388,6 +388,7 @@ class Database {
             VALUES
                 (?, ?, ?, FALSE, NOW())
         ');
+        $comment = Utils::convertEmojiToAscii($comment);
         $stmt->bind_param('iss', $userId, $comment, $slug);
         $stmt->execute();
         return (int)$stmt->insert_id;

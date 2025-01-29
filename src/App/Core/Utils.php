@@ -90,6 +90,40 @@ class Utils {
         return nl2br(htmlspecialchars($comment), false);
     }
 
+    public static function convertEmojiToAscii(string $text): string
+    {
+        $emojiMap = [
+            "🙂" => ":)",
+            "😀" => ":D",
+            "😃" => ":D",
+            "😄" => ":D",
+            "😉" => ";)",
+            "😢" => ":'(",
+            "😭" => ":'(",
+            "😎" => "B)",
+            "😡" => ">:(",
+            "😜" => ";P",
+            "😆" => "xD",
+            "🙃" => ":)",
+            "😐" => ":|",
+            "😏" => ";)",
+            "🥺" => ":c",
+            "😇" => "O:)",
+            "🤔" => ":/",
+            "🤨" => ":?",
+            "🤯" => "!!!",
+            "😲" => ":o",
+            "🤗" => "(:",
+            "❤️" => "<3",
+            "💔" => "</3",
+        ];
+
+        $text = str_replace(array_keys($emojiMap), array_values($emojiMap), $text);
+        return preg_replace_callback('/[\x{1F300}-\x{1FAFF}]+/u', function () {
+            return ':emoji:'; // Replace unknown emojis with a generic ":emoji:"
+        }, $text);
+    }
+
     private static function processAutolinks(
         string $tag,
         string $content

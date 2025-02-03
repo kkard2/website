@@ -65,7 +65,7 @@ also, check out <a href='/ophs'>/ophs</a> (other people hating software)
         $prevDateTime = null;
 
         foreach ($this->entries as $entry) {
-            if ($entry->dateTime != $prevDateTime) {
+            if ($prevDateTime === null || ($entry->dateTime->format("Y-m-d") != $prevDateTime->format("Y-m-d"))) {
                 $prevDateTime = $entry->dateTime;
                 echo "<h2>";
                 echo $prevDateTime->format("Y-m-d");

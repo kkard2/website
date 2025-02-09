@@ -19,6 +19,8 @@ class TemplateView implements View {
         <title><?= "kkard2$this->slug"; ?></title>
         <link rel='stylesheet' href='/style.css'>
         <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <link rel="alternate" type="application/rss+xml" href="https://kkard2.com/software/index.xml" />
+        <link rel="alternate" type="application/rss+xml" href="https://kkard2.com/blog/index.xml" />
     </head>
     <body>
         <header>

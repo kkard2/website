@@ -9,6 +9,10 @@
     RewriteCond %{REQUEST_URI} ^.*\.css$
     RewriteRule ^(.*)$ /content/$1 [L,END]
 
+    # md
+    RewriteCond %{REQUEST_URI} ^.*\.md$
+    RewriteRule ^(.*)$ /content/$1 [L,END]
+
     # # rss
     # RewriteCond %{REQUEST_URI} \.xml$
     # RewriteCond %{REQUEST_URI} !^/content/

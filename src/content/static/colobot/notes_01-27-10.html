@@ -1,257 +1,256 @@
 <a href="notes_01-27-10.md">markdown version</a>
 
 <h1>intro</h1>
-<p>these are notes for things that might not be obvious from the uploaded run.
+<p>these are notes for some things that i wanted to highlight about my run.
 there is a lot of improvement potential, but my goal was sub 1:30:00 and i had
 to convince myself to stop for now. i encourage you to use this routing and
 improve my time.
-run was performed on version 0.2.2-alpha</p>
-<h1>general things</h1>
-<ul>
-    <li>you can open selected program with ctrl+e, and execute selected program with
-        alt+e</li>
-    <li>potentially should remap movement keys because you switch programs on the
-        list with alt+w/s, and it&#39;s annoying to deal with (you need to stop moving
-        before executing)</li>
-</ul>
-<h1>map specific</h1>
+run was performed on version 0.2.2-alpha.</p>
 <h2>earth</h2>
 <h3>01 - equipment</h3>
+<p>i use my own <a href="https://kkard2.com/static/colobot/ruleset.html">rules</a>, because i didn't like
+<a href="https://www.speedrun.com/colobot?h=Any-colobot-gold-edition&rules=game">speedrun.com rules</a>
+allowing time warp and also did some minor wording changes.</p>
 <h3>02 - building</h3>
-<ul>
-    <li>writing programs for the entire game</li>
-    <li>no premade programs because it opens a whole other can of worms</li>
-</ul>
+<p>here we write programs that will be used for the entire run - premade programs
+are not allowed. <code>f</code> is firing for 1/20th of a second, which is the lowest time
+that spawns projectiles, and <code>m</code> moves the bot in a straight line. a lot of
+time is saved by <code>m</code> (or "motoring"), because you can overlap doing something
+else with movement.</p>
 <h3>03 - departure</h3>
-<ul>
-    <li>moving wheeled grabber closer saves very marginal amount of time</li>
-    <li>split too early</li>
-</ul>
+<p>destroying the bot factory is a common way to save time if it won't be used
+anymore, it allows for the bot to exit more easily.
+motoring saves marginal amount of time, wheeled bots are faster than
+tracked ones.
+i hit my split key 1s too early, so segment time for this and next level is
+wrong.</p>
 <h2>moon</h2>
 <h3>01 - titanium ore</h3>
-<ul>
-    <li>you can overwrite read-only programs with ctrl+o (it&#39;s somewhat scuffed)</li>
-    <li>probably should build more north</li>
-    <li>building bot factory before research is faster (i think at least, didn&#39;t
-        measure in a long time)</li>
-    <li>sending flying first is faster bc we wait for it, don&#39;t need to worry about
-        wheeled</li>
-</ul>
+<p>here you can see that we overwrite read-only switch cell program with ctrl+o;
+it's a bug, but it's very convienient because you don't need to add a new
+program slot on every bot you need to motor with. whole sequence is
+ctrl+e -&gt; ctrl+o -&gt; m -&gt; enter -&gt; ctrl+e and then alt+e to execute.
+you get used to it after some time.</p>
+<p>i should probably build more north than east.
+building bot factory before doing research is faster (i think at least, didn't
+measure in a long time).</p>
+<p>i don't need to worry about starting motoring on wheeled quickly, because
+i still end up waiting for the flying at the end. but i hope you can see the
+potential of motoring by now.</p>
 <h3>02 &amp; 03 - flying drill #1 &amp; #2</h3>
-<ul>
-    <li>that&#39;s why no premade programs, you could use astronaut to fly thru targets
-        and i don&#39;t want to write precise scripts for flying here</li>
-</ul>
+<p>the only notable thing about this map is that if you allow premade script you
+can make a program for the flying bot, and grab the rest of targets with the
+astronaut.</p>
+<p>in normal gameplay this map is pretty important to get used to flying bots
+because the game knows other bots are mostly useless if you have access to
+flying and they're the bulk of what you'll use in the future.</p>
 <h3>04 - black box</h3>
-<ul>
-    <li>doing the grabber <code>m</code> probably saves like 0.5s</li>
-    <li>too much energy cell charging</li>
-</ul>
+<p>here you can see why remapping movement keys is probably a good idea. i hit
+alt+w or alt+s on accident and it switches to the second program slot, which
+results in program error on alt+e (i want to make space for building this way).
+the current setup forces me to stop moving before i try to execute a program.</p>
+<p>you could be more precise with thie amount of charging, but it doesn't save
+that much time and i'd rather not reset because i wanted to save a second.</p>
 <h2>tropica</h2>
 <h3>01 - the trap</h3>
-<ul>
-    <li>bad time, you can roblox yourself before jetpack warning</li>
-    <li>if you press backwards at the right time you accelerate faster because of the
-        spaceship bump (but too early lowers damage, needs to be after the collision)</li>
-</ul>
+<p>this map just checks if the astronaut is dead. this attempt was pretty bad,
+you can roblox yourself even before the jetpack warning.
+if you press back movement at the right time you can use knockback from the
+bump to distance yourself from the ship faster. pressing it to early will
+result with a lot of damage reduction.</p>
 <h3>02 - amnesia</h3>
-<ul>
-    <li>bad jetpack management near the end</li>
-</ul>
+<p>there are probably some improvements that could be done here, maybe even
+using smilesick fly which i'll discuss in more detail on volcano. jetpack
+management is scuffed near the end, you don't want to go up the spaceship
+without flying.</p>
 <h3>03 - on the offensive</h3>
-<ul>
-    <li>it&#39;s kinda random with ant movement</li>
-    <li>energy cell sacrifice kinda precise but not really</li>
-    <li>you can shoot with alt+e and aim at the same time, that&#39;s why <code>f</code> script
-        works so well instead of roboaim</li>
-    <li>in one attempt i got stuck foilage with flight disabled (the green sphere)</li>
-    <li>kinda bad shooting</li>
-    <li>unoptimal north-east ant rng</li>
-    <li>you can get screwed on power so you need to be :aware:</li>
-</ul>
+<p>in retrospect, i should probably use the flying grabber instead of the wheeled
+one. the reasoning behind using a wheeled one is that i can motor easier, but i
+don't think it's worth it.</p>
+<p>if you line it up properly energy cell sacrifice should not fail.</p>
+<p>in one run i got stuck in foliage in the flight preventing sphere, so i'm
+careful to not do that again.</p>
+<p>note that i can aim and then shoot with alt+e, which makes it very viable to
+use <code>f</code> instead of <code>roboaim</code> like previous runs.</p>
+<p>there is a chance of energy running out, but after doing this level a few times
+it's pretty consistent, apart from ants moving randomly.</p>
 <h3>04 - shooting practice</h3>
-<ul>
-    <li>going to the target in the straight line instead of towards tnt bot</li>
-    <li>you can take off without the shooter</li>
-</ul>
+<p>regarding movement on this map, i'm trying to fly straight towards the next
+target instead of the tnt bot. this could also be improved with astronaut
+grabbing some targets, but to a lesser extent (of course talking about premade
+programs)</p>
+<p>you can take off without the shooter, which saves a few seconds.</p>
 <h3>05 - black box</h3>
-<ul>
-    <li>bad titanium ore placement lost few seconds but overlapped with building</li>
-    <li>you can just grab power cell but ¯\_(ツ)_/¯</li>
-</ul>
+<p>i placed the first titanium ore way too far from the center, so i struggle
+with the second one and ultimately fail, which loses a few seconds.</p>
+<p>something to note, i didn't measure the correct way to path with the subber
+so maybe it's possible to save 1-2s there.</p>
 <h2>crystalium</h2>
 <h3>01 - viruses</h3>
-<ul>
-    <li>should probably open the <code>m</code> program in the second slot</li>
-    <li>pretty good time</li>
-</ul>
+<p>i should probably open <code>m</code> in the second slot; i don't open it at all because i
+use collect titanium from the first slot and it's selected by default.</p>
+<p>worms are going underground in cycles, so maybe it is a good idea to make the
+shooter first instead of the grabber?</p>
 <h3>02 - subterranean strategy</h3>
-<ul>
-    <li>map is on a timer (which is randomized for a good measure)</li>
-    <li>lost a cycle on 4th worm</li>
-</ul>
+<p>this map is on a timer, if you do it perfectly and you're lucky you don't need
+to wait for any worms to resurface.</p>
+<p>lost a cycle on the 4th worm in this run, this is the most likely candidate for
+losing a cycle.</p>
 <h3>03 - system failure</h3>
-<ul>
-    <li>cutscene</li>
-</ul>
+<p>this is basically a cutscene after i get to the spot where the rouge bot will
+land. i tried to somehow break the program and get the black box early, but i
+don't think it's possible.</p>
+<p>so you can skip 2 minutes ahead in the video after i land.</p>
 <h3>04 - the lost valley</h3>
-<ul>
-    <li>just skipping everything by grabbing the bb, same as fwr</li>
-</ul>
+<p>same strategy as the former world record, you can grab the black box and mostly
+ignore aliens.</p>
 <h2>saari</h2>
 <h3>01 - uranium</h3>
-<ul>
-    <li>first &quot;sketchy&quot; map this far into the run</li>
-    <li>right path is faster than going intended way (also more consistent)<ul>
-            <li>if you go inteded path it&#39;s very easy to <code>m</code> off the mountain when juggling
-                bots</li>
-        </ul>
-    </li>
-    <li>too late switching to grabber twice (first on angle adjustment, second
-        driving into the wall)</li>
-    <li>lower battery than usual</li>
-</ul>
+<p>this is the first "sketchy" level this far into the run.</p>
+<p>previously i had a very similar strategy, but i was motoring along the intended
+path. i changed it to go right when i went back to routing after losing a
+run twice in a row on this level. it is more consistent and faster, so i'm glad
+i did that.</p>
+<p>on this particular attempt, i am too late switching to grabber twice, first on
+the angle adjustment, second when i'm driving into the wall. this is why i end
+up with lower energy cell level than usual.</p>
 <h3>02 - invasion</h3>
-<ul>
-    <li>very random (or i&#39;m bad idk)</li>
-    <li>you only need one tower<ul>
-            <li>you can actually modify defender program to aim down and not goto
-                anywhere, but you need to move it around during different waves, it&#39;s
-                slow (or i&#39;m bad idk)</li>
-        </ul>
-    </li>
-    <li>building radar is recommended because of randomness</li>
-    <li>runs died on this map (running out of energy)</li>
-</ul>
+<p>this level is quite random, ants can either cooperate or not.</p>
+<p>i only need to build one tower on the other side than the provided bot. i
+experimented a bit with not building a tower at all by modifying provided
+defender program; removing goto and aiming down a bit. this allows for it to
+kill ants by staying up on the spaceship, but you need to move it around after
+it kills a "wave", so it didn't really save time.</p>
+<p>building radar is kinda necessary because of ant moving very randomly.</p>
+<p>some runs died on this level because of the shooter running out of energy.
+also, waves are delayed by using alien eggs, i'm mentioning it here because
+it'll be relevant on terranova 3.</p>
 <h3>03 - disarmed</h3>
-<ul>
-    <li>map is bad imo</li>
-    <li>one run died there lol</li>
-    <li>overlap grabbing black box, obv</li>
-    <li>you can overlap black box without scripts actually</li>
-</ul>
+<p>i overlap killing ants with grabbing the black box. you can even do it without
+using a motor script but it's harder.</p>
 <h2>volcano</h2>
 <h3>01 - transport</h3>
-<ul>
-    <li>don&#39;t need to charge, but consistency ig and it doesn&#39;t lose time</li>
-    <li>you can mostly ignore the spider</li>
-    <li>from my testing i don&#39;t think it&#39;s worth it to try creating a wheeled bot for
-        the short distance it can drive</li>
-</ul>
+<p>charging energy cell here is not necessary, but doesn't lose time.</p>
+<p>you can mostly ignore this one spider, i never died to it but i quicksave
+beforehand just to be safe.</p>
+<p>from my testing you don't have enough time to make an additional wheeled
+grabber; it wouldn't save a lot of time anyway.</p>
 <h3>02 - analysis</h3>
-<ul>
-    <li>wasps go to nearest target, so you can just grab titanium that is most north
-        and they&#39;ll focus on energy cells</li>
-    <li>i&#39;m stupid, i&#39;m supposed to get the power cell for flying bot first, then i
-        can overlap flying with building the lab</li>
-</ul>
+<p>i skip building a tower, and instead grab the most north titanium cubes.
+wasps focus the closest item, and after grabbing 2 titanium, they focus on
+energy cells.</p>
+<p>i do things in the wrong order, i'm supposed to power the grabber first, then
+build the lab while motoring towards the organic matter.</p>
 <h3>03 - mountain warfare</h3>
-<ul>
-    <li>scary mission</li>
-    <li>delaying grabber intentionally for consistency, don&#39;t want it to break</li>
-</ul>
+<p>this level is somewhat scary, the risk of losing a bot here is very real.
+i delay the grabber for consistency but it's not failproof.</p>
 <h3>04 - technological treasure</h3>
-<ul>
-    <li><a href="https://youtu.be/RiuduNKK6N8?t=112">smilesick skip</a></li>
-</ul>
+<p>this is the level where i use the
+<a href="https://youtu.be/RiuduNKK6N8?t=112">smilesick skip</a>. when flying, if i time
+starting to ascend correctly after the engine overheats i'm still going up
+due to momentum. it's not possible to cross this gap without this technique.</p>
+<p>i'm using the jetpack overheat indicator crossing map zoom slider position as
+a clue to start going up.</p>
 <h3>05 - safe home</h3>
-<ul>
-    <li>for the first gap you also need to use smileskip fly (at least i think so)</li>
-    <li>accidental 2x time (f8 is near f9 (load quicksave))</li>
-    <li>also i&#39;m bad</li>
-    <li>tons of mistakes in the later part because i&#39;m annoyed at the accidental
-        timewarp</li>
-</ul>
+<p>for the first gap here you also need the smilesick fly.</p>
+<p>i mess up and i have to load a quicksave using f9 2 times. before the second
+time i hit f8 on accident, which enables 2x time speed. it doesn't give me any
+advantage because i load after that, but i get pretty annoyed at that, and
+start making stupid mistakes.</p>
+<p>it technically makes this run not verifyable under my ruleset, but i kept going
+regardless.</p>
 <h3>06 - time for a sharp exit</h3>
+<p>nothing</p>
 <h2>centaury</h2>
 <h3>01 - cloning</h3>
-<ul>
-    <li>should&#39;ve moved astronout while <code>m</code>ing to the ship with titanium</li>
-    <li>maybe i don&#39;t place converter in the right place</li>
-    <li>i&#39;m forgetting everything</li>
-    <li>switching to astronaut too early (actually now that i think about it it
-        didn&#39;t lose time)</li>
-    <li>there is a chance for legged grabber to put titanium in a place you can&#39;t
-        build a bot factory</li>
-</ul>
+<p>you can't grab titanium before the recycler animation finishes.</p>
+<p>i delay starting collect titanium on the legged grabber, because if i do it too
+early it crashes because converter is not built yet. i also should've moved the
+astronaut near the building site of the converter while motoring.</p>
+<p>i forgot a bit how this level is supposed to be played. i switch to the
+astronaut too early both times.</p>
+<p>legged grabber can potentially put titanium in a space that is not big enough
+to build a bot factory.</p>
+<p>maybe i should've considered grabbing 2 titanium ores with the flying grabber,
+because i wait some time for the last cube. other thing i could try is putting
+the converter in a better spot.</p>
 <h3>02 - target practice</h3>
-<ul>
-    <li>not going forward for the first target, starting with right and you don&#39;t
-        need to go thru the ship</li>
-</ul>
+<p>going to the side instead of forward allows for more linear pathing. you don't
+need to go thru the ship.</p>
 <h3>03 - cleansing</h3>
-<ul>
-    <li>potential for blowing up spiders with the grabber, just fly thru them
-        (then you fly with shooter counter clockwise?)</li>
-    <li>maybe you could create 2 bots instead of making a nuclear power cell, but idk</li>
-    <li>you don&#39;t want to wait for new nuclear cell message because it spawns earlier</li>
-    <li>bad final batch of ants</li>
-</ul>
+<p>you don't want to wait for the new nuclear cell message, because you can grab
+it earlier than that.</p>
+<p>shown startegy speaks for itself, but there are some theoretical to go over.
+you could potentialy blow up spiders with the grabber by just flying thru them.
+it would require some tight switching between bots i think.
+there is also potential for not making a nuclear power cell and make 2 shooters
+instead, but i think it's even less realistic.</p>
+<p>i handle this final batch of ants very poorly.</p>
 <h3>04 - new policies</h3>
-<ul>
-    <li>i&#39;m bad this is the wrong order</li>
-    <li>you should overlap building bot factory with research</li>
-</ul>
+<p>i build a bot factory before starting research, which loses time.</p>
 <h3>05 - self-defense</h3>
-<ul>
-    <li>can&#39;t really save time here, maybe going back with astronaut overlapped with
-        bot moving towards ship?</li>
-</ul>
+<p>there is no time to save here, aside from maybe motoring to the ship and going
+back with astrounaut at the same time.</p>
 <h2>orpheon</h2>
-<p>EPILEPSY WARNING</p>
+<p>this planet has flashing lights, so epilepsy warning.</p>
 <h3>01 - logistics</h3>
-<ul>
-    <li>kinda sla?</li>
-    <li>should probably save &amp; load before leaving base (maybe every time i get a
-        lightning)</li>
-    <li>i should know which ant to go to, i&#39;m bad</li>
-    <li>without allowing save load this map is rng hell</li>
-    <li>sound is breaking very noticably now</li>
-</ul>
+<p>this is the first level where i'd apply the definition of save-load abuse
+(sla). saving and loading resets the lightning timer, so it gives you an
+advantage. in retrospect i should've used it and save-loaded before leaving the
+spaceship.</p>
+<p>on the other side doing this map without sla allowed is rng hell.</p>
+<p>also i don't remember which ant to go to, i really should.</p>
+<p>after the load the <code>f</code> program i opened previously was gone, because
+overwriting read-only programs is not saved. there were also very noticable
+sound issues, it's due to some bug in the engine and it happens sometimes.</p>
 <h3>02 - storm shelter</h3>
-<ul>
-    <li>spamming save button</li>
-</ul>
+<p>same as before, spamming save button.</p>
 <h2>terranova</h2>
+<p>epilepsy warning over.</p>
 <h3>01 - killer mushrooms</h3>
-<ul>
-    <li>very intentional order</li>
-    <li>need tower for like 1 ant<ul>
-            <li>maybe possible to tank damage with astronaut?</li>
-        </ul>
-    </li>
-    <li>actually maybe building subber before researching shielder is better?</li>
-    <li>skipping mushrooms this way is easier for <code>m</code>ing</li>
-</ul>
+<p>order of operation here is very intentional, but maybe it can still be
+improved.</p>
+<p>tower is needed for like 1 ant, but maybe it's possible to tank damage with the
+astronaut? didn't test it.</p>
+<p>skipping mushrooms this way is easier for motoring, and also probably faster.</p>
 <h3>02 - poison hail</h3>
-<ul>
-    <li>note that subber is faster that&#39;s all ig</li>
-</ul>
+<p>subber is faster, so i start moving with the shielder first.</p>
+<p>you can also see what happens if you mess up overwriting a script.</p>
 <h3>03 - gold digger</h3>
-<ul>
-    <li>only &quot;necessary&quot; use of sla; it resets the <code>wait</code> function in ant scripts</li>
-    <li>idk why epsitec didn&#39;t use alien eggs here like on saari 02 (it prevents sla)</li>
-    <li>moving down with subber and shielder so one ant that comes doesn&#39;t stand on spaceship doors</li>
-    <li>i think wasps were broken by some update bc epsitec would catch this in testing right?</li>
-    <li>need to sla before starting building (derrick), otherwise it breaks everything</li>
-    <li>sla resets shielder range</li>
-    <li>unoptimal grabber movement</li>
-</ul>
+<p>this is the only use of sla in the run that saves time.
+so, ants in this level are delayed via a cbot script, which waits for some
+amount of time at the start. if you perform a save-load this timer resets.</p>
+<p>this is different from saari 2, which uses eggs for this purpose, and
+eliminates the potential for sla giving an advantage.</p>
+<p>moving down with subber and shielder makes the only ant that comes to the ship
+not block spaceship doors at the end of the level.</p>
+<p>the second save-load happens before i start building derrick, because
+save-loading during that breaks things. also, save-load resets shielder range
+so i need to fix that because otherwise power might run out.</p>
+<p>i return with the grabber very unoptimally, but it is what it is.</p>
 <h3>04 - alien queen</h3>
-<ul>
-    <li>some unoptimal grabber handling</li>
-    <li>rng, kinda need no ants to come to base when grabbing yellow key</li>
-    <li>accidental shooting by phazer, it&#39;s alright we have battery</li>
-    <li>i don&#39;t want ants to come when going out with orga shooter<ul>
-            <li>they came and i changed my usual battery swap place</li>
-            <li>astronaut takes almost no damage so using as shield</li>
-        </ul>
-    </li>
-    <li><p>optimally you want winged grabber to switch energy cells, but it often doesn&#39;t have enough power to do so comfortably</p>
-    </li>
-    <li><p>you don&#39;t want to focus on ants behind you, they will follow you (hopefully)</p>
-    </li>
-    <li>pressed e instead of alt+e, i have some spare power tho</li>
-    <li>maybe i should fly orga shooter here as well?</li>
-</ul>
-
+<p>my grabber handling on this level is pretty suboptimal, i often leave it
+motoring for too long.</p>
+<p>when grabbing the yellow key i'm really hoping that no ants come to the base
+and destroy the orga shooter (it's rng). i get a warning in the form of its
+icon flashing red, but i can't really do much when grabber is in danger as
+well.</p>
+<p>i'm shooting the phaser by accident, but there is enough energy in this nuclear
+cell for it to be a non-issue.</p>
+<p>during motoring the phazer shooter i kill ants that were guarding the yellow
+key because it's a win condition. now i don't really care if ants come (i would
+prefer if they didn't) because the astronaut will tank the damage and shield
+the shielder from getting destroyed (only used bot left besides phazer
+shooter).</p>
+<p>in this run they come, so i swap nuclear cells in a different place than usual.
+you need to do that because shielder will not last the whole route with its
+original energy level. if you still have the grabber with enough energy left,
+you can swap cells with the bot because it's faster. it's inconsistent for me
+to get to that point tho.</p>
+<p>i don't focus on ants behind me, because they just follow me and i can kill
+them at the end. maybe it's possible to get the orga shooter here as well? i
+didn't try that when routing, but it would be very helpful to finish off all
+the ants.</p>
+<p>so, that's basically the run. i hope you enjoyed it! if you have any questions,
+leave them in the comments below and i'll try to answer them to the best of my
+ability. see you around.</p>

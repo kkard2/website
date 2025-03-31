@@ -210,7 +210,7 @@ header a {
 
 .menu-content a:hover {
     color: black;
-    background: #ff0;
+    background: #550;
 }
 
 .menu-content a::before {
@@ -257,11 +257,11 @@ header a {
 
 .input-wrapper::before {
     content: "[";
-    color: #ff0;
+    color: #550;
 }
 .input-wrapper::after {
     content: "]";
-    color: #ff0;
+    color: #550;
 }
 
 .input-wrapper:focus-within::before,
@@ -287,7 +287,7 @@ input:invalid {
 button {
     border: 0 none;
     background: none;
-    color: #ff0;
+    color: #550;
     font-family: Consolas, monospace, monospace;
     font-size: 16px;
     line-height: 1.2;
@@ -303,7 +303,7 @@ button::after {
 
 button:hover {
     color: #000;
-    background: #ff0;
+    background: #550;
     cursor: pointer;
 }
 
@@ -337,13 +337,13 @@ textarea {
     display: block;
     overflow: hidden;
     content: "--------------------------------------------------------------------------------";
-    color: #ff0;
+    color: #550;
 }
 .textarea-wrapper::after {
     display: block;
     overflow: hidden;
     content: "--------------------------------------------------------------------------------";
-    color: #ff0;
+    color: #550;
 }
 
 .textarea-wrapper:focus-within::before,
@@ -356,7 +356,7 @@ textarea {
 }
 
 .user-comment-content {
-    color: #330;
+    color: #550;
     margin-bottom: 1em;
     word-wrap: break-word;
     word-break: break-word;

@@ -18,7 +18,7 @@ h3,
 h4,
 h5,
 h6 {
-    color: white;
+    color: black;
     margin-top: 2em;
     margin-bottom: 1em;
     font-size: 16px;
@@ -27,12 +27,12 @@ h6 {
 }
 
 
-h1::before { color: #fff; content: "# "; }
-h2::before { color: #ccc; content: "## "; }
-h3::before { color: #999; content: "### "; }
-h4::before { color: #999; content: "#### "; }
-h5::before { color: #999; content: "##### "; }
-h6::before { color: #999; content: "###### "; }
+h1::before { color: #000; content: "# "; }
+h2::before { color: #333; content: "## "; }
+h3::before { color: #666; content: "### "; }
+h4::before { color: #666; content: "#### "; }
+h5::before { color: #666; content: "##### "; }
+h6::before { color: #666; content: "###### "; }
 
 
 ul {

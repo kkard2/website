@@ -1,6 +1,6 @@
 body {
     background: white;
-    color: #ddd;
+    color: black;
     font-family: Consolas, monospace, monospace;
     font-size: 16px;
     margin-inline: max(1ch, 50% - 80ch / 2);

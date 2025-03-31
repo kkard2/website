@@ -1,5 +1,5 @@
 body {
-    background: black;
+    background: white;
     color: #ddd;
     font-family: Consolas, monospace, monospace;
     font-size: 16px;
@@ -90,8 +90,8 @@ h3 > a.id-link:hover,
 h4 > a.id-link:hover,
 h5 > a.id-link:hover,
 h6 > a.id-link:hover {
-    background-color: white;
-    color: black;
+    background-color: black;
+    color: white;
     max-width: fit-content;
 }
 
@@ -104,7 +104,7 @@ strong::after {
 }
 
 strong {
-    color: white;
+    color: black;
 }
 
 a:target {
@@ -205,11 +205,11 @@ header a {
 
 .menu-content a {
     display: block;
-    color: white;
+    color: black;
 }
 
 .menu-content a:hover {
-    color: black;
+    color: white;
     background: #ff0;
 }
 

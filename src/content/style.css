@@ -1,6 +1,6 @@
 body {
-    background: white;
-    color: black;
+    background: black;
+    color: #ddd;
     font-family: Consolas, monospace, monospace;
     font-size: 16px;
     margin-inline: max(1ch, 50% - 80ch / 2);
@@ -18,7 +18,7 @@ h3,
 h4,
 h5,
 h6 {
-    color: black;
+    color: white;
     margin-top: 2em;
     margin-bottom: 1em;
     font-size: 16px;
@@ -27,12 +27,12 @@ h6 {
 }
 
 
-h1::before { color: #000; content: "# "; }
-h2::before { color: #333; content: "## "; }
-h3::before { color: #666; content: "### "; }
-h4::before { color: #666; content: "#### "; }
-h5::before { color: #666; content: "##### "; }
-h6::before { color: #666; content: "###### "; }
+h1::before { color: #fff; content: "# "; }
+h2::before { color: #ccc; content: "## "; }
+h3::before { color: #999; content: "### "; }
+h4::before { color: #999; content: "#### "; }
+h5::before { color: #999; content: "##### "; }
+h6::before { color: #999; content: "###### "; }
 
 
 ul {
@@ -90,8 +90,8 @@ h3 > a.id-link:hover,
 h4 > a.id-link:hover,
 h5 > a.id-link:hover,
 h6 > a.id-link:hover {
-    background-color: black;
-    color: white;
+    background-color: white;
+    color: black;
     max-width: fit-content;
 }
 
@@ -104,7 +104,7 @@ strong::after {
 }
 
 strong {
-    color: black;
+    color: white;
 }
 
 a:target {
@@ -199,18 +199,18 @@ header a {
     top: 100%;
     margin-top: -1px;
     left: 0;
-    background-color: #ddd;
+    background-color: #444;
     z-index: 1;
 }
 
 .menu-content a {
     display: block;
-    color: black;
+    color: white;
 }
 
 .menu-content a:hover {
     color: black;
-    background: #550;
+    background: #ff0;
 }
 
 .menu-content a::before {
@@ -257,11 +257,11 @@ header a {
 
 .input-wrapper::before {
     content: "[";
-    color: #550;
+    color: #ff0;
 }
 .input-wrapper::after {
     content: "]";
-    color: #550;
+    color: #ff0;
 }
 
 .input-wrapper:focus-within::before,
@@ -287,7 +287,7 @@ input:invalid {
 button {
     border: 0 none;
     background: none;
-    color: #550;
+    color: #ff0;
     font-family: Consolas, monospace, monospace;
     font-size: 16px;
     line-height: 1.2;
@@ -303,7 +303,7 @@ button::after {
 
 button:hover {
     color: #000;
-    background: #550;
+    background: #ff0;
     cursor: pointer;
 }
 
@@ -337,13 +337,13 @@ textarea {
     display: block;
     overflow: hidden;
     content: "--------------------------------------------------------------------------------";
-    color: #550;
+    color: #ff0;
 }
 .textarea-wrapper::after {
     display: block;
     overflow: hidden;
     content: "--------------------------------------------------------------------------------";
-    color: #550;
+    color: #ff0;
 }
 
 .textarea-wrapper:focus-within::before,
@@ -356,7 +356,7 @@ textarea {
 }
 
 .user-comment-content {
-    color: #550;
+    color: #ff0;
     margin-bottom: 1em;
     word-wrap: break-word;
     word-break: break-word;

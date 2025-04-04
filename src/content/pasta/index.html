@@ -4,6 +4,29 @@ very secret page without any links to it because i can't be bothered
 (and also want to wait before that)
 </p>
 
+<h2>2025-04-04</h2>
+<div>
+    <p>
+    generalnie to nix to jest deklaratywny OS. Cała konfiguracja systemu wraz z jego pakietami jest w jednym pliku configuration.nix, tam ustalasz jakich używasz sterowników, jakich masz userów, jakie masz pakiety. Nie instalaujesz rzeczy tak jak na inncyh distro pisząc pacman -S apka, tylko dodajesz ją do pliku, w którym możesz normalnie dawać komentarze dzięki czemu widzisz co gdzie jest, zapisujesz sobie czemu coś pobrałeś, generalnie giga clean.
+    </p>
+    <p>
+    Dodatkowo te pakiety są tak pakowane, że jak np. pobierzesz nwm tool w pythonie, to do twojego shella jest dodawany sam tool, a nie wszystkie narżedzie pythonowe których używa, każdy pakiet ma swoje osobne środowisko, do którego nie masz dostępu.
+    </p>
+    <p>
+    Jednocześnie, jeżeli np. 2 pakiety używają tej samej libki do pythona w tej samej wersji, to nie pobierasz jej 2 razy, tylko jest shareowana między nimi.
+    </p>
+    <p>
+    Jak chcesz napisać kod w czymś, to nie instalujesz pakietu do konfiguracji systemowej, tylko robisz lokalnego enva w folderze z projketem i tylko w nim będą działać pakiety, których używasz do devowania, np. ja mam devenv do pythona i toolingu do AI i w tym folderze mam wszystkie projekty, ale jednocześnie jak wpiszę python będąc w home, to pokaże mi że nie ma takiej komendy, autocomplete też teog nie widzi, żaden tooling do programowania nie zaśmieca mi expa.
+    </p>
+    <p>
+    Jak chcesz sobie przetestować jakiś pakiet albo potrzebujesz użyć go raz, to piszesz nix-shell -p pakiet i wtedy otwiera ci się nowy shell w którym masz ten pakiet, a po kliknięciu ctrl + Z wychodzisz z tego shella i pakiet jest wywalany przez system, więc nie ma szans że zapomnisz usunąć jakiegoś gówna.
+    </p>
+    <p>
+    Generalnie to 10/10 system, jedyny minus jest taki że jak jakiegoś pakietu nie ma w nixpkgs to musisz sam go zapakować, nie możesz po prostu odpalić binarki
+    </p>
+</div>
+<span class="comment">someone somewhere discord (nerd emoji) @ 2025-04-04 23:23:00</span>
+
 <h2>2025-03-27</h2>
 <div>
     <p>

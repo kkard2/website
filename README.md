@@ -38,3 +38,4 @@ good luck
 
 # php
 php 8.1 is required (at least that's what my vps is running)
+test

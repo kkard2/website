@@ -31,3 +31,5 @@
     RewriteCond %{REQUEST_URI} !^/index\.php$
     RewriteRule ^(.*)$ /index.php? [L,QSA]
 </IfModule>
+
+AddCharset UTF-8 .txt

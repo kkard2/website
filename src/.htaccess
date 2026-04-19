@@ -5,12 +5,22 @@
     RewriteCond %{REQUEST_URI} ^/res/.*$
     RewriteRule ^(.*)$ /content/$1 [L,END]
 
+    # these are actual ragebait
+
     # css
     RewriteCond %{REQUEST_URI} ^.*\.css$
     RewriteRule ^(.*)$ /content/$1 [L,END]
 
     # md
     RewriteCond %{REQUEST_URI} ^.*\.md$
+    RewriteRule ^(.*)$ /content/$1 [L,END]
+
+    # r
+    RewriteCond %{REQUEST_URI} ^.*\.r$
+    RewriteRule ^(.*)$ /content/$1 [L,END]
+
+    # txt
+    RewriteCond %{REQUEST_URI} ^.*\.txt$
     RewriteRule ^(.*)$ /content/$1 [L,END]
 
     # # rss

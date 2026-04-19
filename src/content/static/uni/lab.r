@@ -19,7 +19,7 @@ ramka$suma=rowSums()
 getwd()
 
 
-# Zad 1
+# Zadanie 1
 
 # a) Przy u»yciu funkcji plot( ) narysować łamaną przechodzącą przez punkty
 # (1, 20), (20, 30), (40, 13), (80, 25).

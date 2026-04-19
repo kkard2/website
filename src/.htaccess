@@ -1,4 +1,6 @@
-AddCharset UTF-8 .txt .md .r
+<FilesMatch "\.(txt|md|r)$">
+    ForceType "text/plain; charset=UTF-8"
+</FilesMatch>
 
 <IfModule mod_rewrite.c>
     RewriteEngine On

@@ -5,6 +5,9 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
+    RewriteCond %{REQUEST_URI} ^/favicon.ico$
+    RewriteRule ^(.*)$ /content/$1 [L,END]
+
     # images, etc.
     RewriteCond %{REQUEST_URI} ^/res/.*$
     RewriteRule ^(.*)$ /content/$1 [L,END]
